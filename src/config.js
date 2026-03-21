@@ -135,26 +135,34 @@ export const OBSERVATION_SITES = [
   }
 ];
 
-export function getRuntimeConfig() {
+function buildRuntimeConfig(source = {}) {
   return {
-    port: Number(process.env.PORT || 3000),
-    pollMinutes: Number(process.env.POLL_MINUTES || 15),
-    nasaApiKey: process.env.NASA_API_KEY || "DEMO_KEY",
-    timezone: "Europe/Sarajevo",
-    darkAltitudeDeg: -12,
-    evaluationHours: 18,
+    port: Number(source.PORT || 3000),
+    pollMinutes: Number(source.POLL_MINUTES || 15),
+    nasaApiKey: source.NASA_API_KEY || "DEMO_KEY",
+    timezone: source.TIMEZONE || "Europe/Sarajevo",
+    darkAltitudeDeg: Number(source.DARK_ALTITUDE_DEG || -12),
+    evaluationHours: Number(source.EVALUATION_HOURS || 18),
     alertThresholds: {
       watch: 45,
       possible: 60,
       favorable: 72
     },
     smtp: {
-      host: process.env.SMTP_HOST || "",
-      port: Number(process.env.SMTP_PORT || 587),
-      secure: String(process.env.SMTP_SECURE || "false").toLowerCase() === "true",
-      user: process.env.SMTP_USER || "",
-      pass: process.env.SMTP_PASS || "",
-      from: process.env.SMTP_FROM || "AuroraChaser <alerts@example.com>"
+      host: source.SMTP_HOST || "",
+      port: Number(source.SMTP_PORT || 587),
+      secure: String(source.SMTP_SECURE || "false").toLowerCase() === "true",
+      user: source.SMTP_USER || "",
+      pass: source.SMTP_PASS || "",
+      from: source.SMTP_FROM || "AuroraChaser <alerts@example.com>"
     }
   };
+}
+
+export function getRuntimeConfig() {
+  return buildRuntimeConfig(process.env);
+}
+
+export function getWorkerRuntimeConfig(env = {}) {
+  return buildRuntimeConfig(env);
 }

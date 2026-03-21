@@ -43,6 +43,35 @@ Ako zelis stvarne email alarme, popuni u `.env`:
 - `SMTP_PASS`
 - `SMTP_FROM`
 
+## Cloudflare Workers + D1 + Resend
+
+Cloudflare migracija sada koristi:
+
+- `src/worker.js` kao Worker entrypoint
+- `wrangler.jsonc` za assets, D1 binding i cron trigger
+- `migrations/0001_initial.sql` za D1 schema setup
+- `src/storage.js` kao D1 storage layer
+
+Za Cloudflare email delivery koristi se Resend API, ne SMTP. Potrebni secrets su:
+
+- `NASA_API_KEY`
+- `RESEND_API_KEY`
+- `RESEND_FROM`
+- `RESEND_REPLY_TO` opcionalno
+
+Osnovni deploy tok:
+
+```bash
+npm install
+npx wrangler login
+npx wrangler d1 create aurora-chaser --location weur
+npx wrangler d1 migrations apply aurora-chaser --remote
+npx wrangler secret put NASA_API_KEY
+npx wrangler secret put RESEND_API_KEY
+npx wrangler secret put RESEND_FROM
+npx wrangler deploy
+```
+
 ## Reference
 
 - NOAA SWPC, "Aurora - 30 Minute Forecast": https://www.swpc.noaa.gov/products/aurora-30-minute-forecast

@@ -12,7 +12,7 @@ import {
   upsertSubscriber,
   wasNotificationSent,
   writeNotificationLog
-} from "./src/storage.js";
+} from "./src/storage-file.js";
 import { createTransporter, sendAuroraEmail } from "./src/emailService.js";
 
 const __filename = fileURLToPath(import.meta.url);

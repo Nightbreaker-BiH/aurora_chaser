@@ -1,22 +1,6 @@
 import nodemailer from "nodemailer";
 
-export function createTransporter(smtp) {
-  if (!smtp.host || !smtp.user || !smtp.pass) {
-    return null;
-  }
-
-  return nodemailer.createTransport({
-    host: smtp.host,
-    port: smtp.port,
-    secure: smtp.secure,
-    auth: {
-      user: smtp.user,
-      pass: smtp.pass
-    }
-  });
-}
-
-export async function sendAuroraEmail({ transporter, smtpFrom, to, subscriber, status, appMeta }) {
+export function buildAuroraEmailContent({ subscriber, status, appMeta }) {
   const subject = `[${appMeta.name}] ${status.summary.levelLabel} za ${status.summary.bestSite.name} veceras`;
   const text = [
     `${appMeta.name}`,
@@ -49,6 +33,28 @@ export async function sendAuroraEmail({ transporter, smtpFrom, to, subscriber, s
       <p><a href="${appMeta.mapSourceUrl}">NOAA aurora mapa</a></p>
     </div>
   `;
+
+  return { subject, text, html };
+}
+
+export function createTransporter(smtp) {
+  if (!smtp.host || !smtp.user || !smtp.pass) {
+    return null;
+  }
+
+  return nodemailer.createTransport({
+    host: smtp.host,
+    port: smtp.port,
+    secure: smtp.secure,
+    auth: {
+      user: smtp.user,
+      pass: smtp.pass
+    }
+  });
+}
+
+export async function sendAuroraEmail({ transporter, smtpFrom, to, subscriber, status, appMeta }) {
+  const { subject, text, html } = buildAuroraEmailContent({ subscriber, status, appMeta });
 
   await transporter.sendMail({
     from: smtpFrom,

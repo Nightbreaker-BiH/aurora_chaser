@@ -4,3 +4,4 @@ data/*.local.json
 data/subscribers.json
 data/notifications.json
 *.log
+.wrangler/

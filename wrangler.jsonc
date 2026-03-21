@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aurora-chaser",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-03-21",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "POLL_MINUTES": "15",
+    "TIMEZONE": "Europe/Sarajevo",
+    "DARK_ALTITUDE_DEG": "-12",
+    "EVALUATION_HOURS": "18"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "aurora-chaser",
+      "database_id": "59b05c74-1ae6-4243-a1e8-4e556420d4a2",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "triggers": {
+    "crons": ["*/15 * * * *"]
+  },
+  "observability": {
+    "enabled": true
+  }
+  // Set secrets with Wrangler before production deploy:
+  // - wrangler secret put NASA_API_KEY
+  // - wrangler secret put RESEND_API_KEY
+  // - wrangler secret put RESEND_FROM
+  // - wrangler secret put RESEND_REPLY_TO
+}
