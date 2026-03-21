@@ -58,8 +58,7 @@ body::before {
 .metric-card,
 .cme-box,
 .list-card,
-.site-card,
-.email-form label {
+.site-card {
   backdrop-filter: blur(20px);
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -433,7 +432,6 @@ body.modal-open {
 
 .viewline-panel,
 .modes-panel,
-.alert-panel,
 .sources-panel {
   grid-column: span 5;
 }
@@ -454,7 +452,6 @@ body.modal-open {
 
 .viewline-panel,
 .modes-panel,
-.alert-panel,
 .sources-panel {
   grid-column: span 5;
 }
@@ -464,7 +461,6 @@ body.modal-open {
   grid-column: span 12;
 }
 
-.alert-panel,
 .sources-panel {
   grid-column: span 6;
 }
@@ -821,8 +817,7 @@ body.modal-open {
 .chart-card,
 .cme-box,
 .list-card,
-.site-card,
-.email-form label {
+.site-card {
   border-radius: 18px;
 }
 
@@ -1196,29 +1191,6 @@ body.modal-open {
   font-size: 0.95rem;
 }
 
-.email-form {
-  display: grid;
-  gap: 14px;
-}
-
-.email-form label {
-  display: grid;
-  gap: 8px;
-  padding: 12px;
-}
-
-.email-form input,
-.email-form select {
-  width: 100%;
-  min-height: 46px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(5, 13, 23, 0.82);
-  color: var(--text);
-  padding: 0 12px;
-  font: inherit;
-}
-
 .form-feedback {
   min-height: 1.4em;
   color: var(--cyan);
@@ -1248,7 +1220,6 @@ body.modal-open {
   .mag-panel,
   .moon-panel,
   .modes-panel,
-  .alert-panel,
   .sources-panel {
     grid-column: span 12;
   }

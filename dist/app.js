@@ -109,12 +109,6 @@ const checklistList = document.querySelector("#checklist-list");
 const sitesList = document.querySelector("#sites-list");
 const sitesNote = document.querySelector("#sites-note");
 const sourcesList = document.querySelector("#sources-list");
-const form = document.querySelector("#email-form");
-const formFeedback = document.querySelector("#form-feedback");
-const emailLabel = document.querySelector("#email-label");
-const thresholdLabel = document.querySelector("#threshold-label");
-const subscriptionSubmit = document.querySelector("#subscription-submit");
-const formNote = document.querySelector("#form-note");
 const fiveDayNote = document.querySelector("#five-day-note");
 const variablesGrid = document.querySelector("#variables-grid");
 const phenomenologyGrid = document.querySelector("#phenomenology-grid");
@@ -124,8 +118,6 @@ const infoPanels = [...document.querySelectorAll(".info-panel")];
 const modeTabs = [...document.querySelectorAll("[data-mode-tab]")];
 const modePanels = [...document.querySelectorAll("[data-mode-panel]")];
 const APOD_FALLBACK_URL = "/sample-apod.json";
-const thresholdSelect = form?.querySelector('select[name="threshold"]');
-const emailInput = form?.querySelector('input[name="email"]');
 
 const SITE_COPY = {
   bihac: {
@@ -321,7 +313,7 @@ const UI_TEXT = {
       }
     ],
     heroPrimaryAction: "BiH vidljivost",
-    heroSecondaryAction: "Email alarm",
+    heroSecondaryAction: "Teren checklist",
     heroBannerAlt: "AuroraChaser hero ilustracija za Bosnu i Hercegovinu",
     heroMetricCurrentKp: "Trenutni KP",
     heroMetricMaxKp: "Maks KP 24h",
@@ -384,19 +376,6 @@ const UI_TEXT = {
     explainHeading: "Sta znace ove varijable",
     variablesTab: "Varijable",
     phenomenologyTab: "Fenomenologija",
-    alertKicker: "Ukljuci aurora alarme",
-    alertHeading: "Email pretplata",
-    emailLabel: "Email",
-    emailPlaceholder: "ime@domena.com",
-    thresholdLabel: "Prag alarma",
-    thresholdOptions: [
-      { value: "possible", label: "Moguce (preporuceno)" },
-      { value: "watch", label: "Pratiti ranije" },
-      { value: "favorable", label: "Samo jaci signal" }
-    ],
-    submit: "Sacuvaj pretplatu",
-    formNote:
-      "Alarm salje mail kada procjena za BiH predje izabrani prag. Live slanje trenutno ide preko Gmail API integracije na Cloudflare Workeru, ali dok je Google OAuth app u Testing modu moze biti potrebna obnova tokena.",
     sourcesKicker: "Reference",
     sourcesHeading: "Izvori i feedovi",
     hpiThresholdTitle: "Razumijevanje auroralne snage",
@@ -498,13 +477,6 @@ const UI_TEXT = {
     geoNoMatch: "Nisam uspio mapirati lokaciju na BiH referentni punkt.",
     geoDenied: "Geolokacija nije dozvoljena ili nije dostupna.",
     nearestSitePrefix: "Najblizi referentni punkt",
-    formSending: "Slanje...",
-    formInvalidEmail: "Unesite validnu email adresu.",
-    formInvalidThreshold: "Nepoznat prag alarma.",
-    formSaved: "Pretplata sacuvana. Alarm ce slati email kada procjena za BiH predje izabrani prag.",
-    formSavedNoSmtp:
-      "Pretplata sacuvana. Za stvarno slanje emailova treba dovrsiti Gmail API konfiguraciju na Workeru.",
-    formError: "Greska pri cuvanju pretplate.",
     statusLoadError: "Nisam uspio ucitati NOAA/NASA/weather podatke. Provjeri backend i mrezu.",
     confidence: "Povjerenje",
     fieldDecision: "Teren odluka",
@@ -568,7 +540,7 @@ const UI_TEXT = {
       }
     ],
     heroPrimaryAction: "BiH visibility",
-    heroSecondaryAction: "Email alerts",
+    heroSecondaryAction: "Field checklist",
     heroBannerAlt: "AuroraChaser hero illustration for Bosnia and Herzegovina",
     heroMetricCurrentKp: "Current KP",
     heroMetricMaxKp: "Max KP 24h",
@@ -631,19 +603,6 @@ const UI_TEXT = {
     explainHeading: "What These Variables Mean",
     variablesTab: "Variables",
     phenomenologyTab: "Phenomenology",
-    alertKicker: "Enable Aurora Alerts",
-    alertHeading: "Email subscription",
-    emailLabel: "Email",
-    emailPlaceholder: "name@domain.com",
-    thresholdLabel: "Alert threshold",
-    thresholdOptions: [
-      { value: "possible", label: "Possible (recommended)" },
-      { value: "watch", label: "Watch earlier" },
-      { value: "favorable", label: "Only stronger signal" }
-    ],
-    submit: "Save subscription",
-    formNote:
-      "The alert sends an email when the Bosnia estimate crosses the selected threshold. Live delivery currently runs through the Gmail API integration on the Cloudflare Worker, but while the Google OAuth app remains in Testing mode the token may need renewal.",
     sourcesKicker: "References",
     sourcesHeading: "Sources and feeds",
     hpiThresholdTitle: "Understanding Aurora Power",
@@ -745,13 +704,6 @@ const UI_TEXT = {
     geoNoMatch: "I could not map your location to a Bosnia reference site.",
     geoDenied: "Geolocation was denied or is not available.",
     nearestSitePrefix: "Nearest reference site",
-    formSending: "Sending...",
-    formInvalidEmail: "Enter a valid email address.",
-    formInvalidThreshold: "Unknown alert threshold.",
-    formSaved: "Subscription saved. The alert will send an email when the Bosnia estimate crosses the selected threshold.",
-    formSavedNoSmtp:
-      "Subscription saved. Complete the Gmail API configuration on the Worker to enable real email delivery.",
-    formError: "Error while saving the subscription.",
     statusLoadError: "I could not load NOAA/NASA/weather data. Check the backend and network.",
     confidence: "Confidence",
     fieldDecision: "Field decision",
@@ -1208,20 +1160,9 @@ function applyStaticTranslations() {
   document.querySelector(".explain-panel h2").textContent = ui.explainHeading;
   infoTabs.find((tab) => tab.dataset.tab === "variables").textContent = ui.variablesTab;
   infoTabs.find((tab) => tab.dataset.tab === "phenomenology").textContent = ui.phenomenologyTab;
-  document.querySelector(".alert-panel .panel-kicker").textContent = ui.alertKicker;
-  document.querySelector(".alert-panel h2").textContent = ui.alertHeading;
   document.querySelector(".sources-panel .panel-kicker").textContent = ui.sourcesKicker;
   document.querySelector(".sources-panel h2").textContent = ui.sourcesHeading;
   document.querySelector(".cme-panel .list-card h3").textContent = ui.cmeRecentHeading;
-
-  emailLabel.textContent = ui.emailLabel;
-  thresholdLabel.textContent = ui.thresholdLabel;
-  subscriptionSubmit.textContent = ui.submit;
-  formNote.textContent = ui.formNote;
-  emailInput.placeholder = ui.emailPlaceholder;
-  thresholdSelect.innerHTML = ui.thresholdOptions
-    .map((option) => `<option value="${option.value}">${escapeHtml(option.label)}</option>`)
-    .join("");
 
   document.querySelector("#apod-placeholder").textContent = ui.apodLoading;
   document.querySelector("#apod-credit").textContent = ui.apodSource;
@@ -2535,43 +2476,6 @@ locateButton.addEventListener("click", () => {
       timeout: 10000
     }
   );
-});
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  formFeedback.textContent = getUi().formSending;
-
-  const formData = new FormData(form);
-  const payload = {
-    email: formData.get("email"),
-    threshold: formData.get("threshold")
-  };
-
-  try {
-    const response = await fetch("/api/subscriptions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(
-        data.error === "INVALID_EMAIL"
-          ? getUi().formInvalidEmail
-          : data.error === "INVALID_THRESHOLD"
-            ? getUi().formInvalidThreshold
-            : getUi().formError
-      );
-    }
-
-    form.reset();
-    formFeedback.textContent = data.emailReady ? getUi().formSaved : getUi().formSavedNoSmtp;
-  } catch (error) {
-    formFeedback.textContent = error instanceof Error ? error.message : getUi().formError;
-  }
 });
 
 langButtons.forEach((button) => {

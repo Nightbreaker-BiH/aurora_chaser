@@ -15,8 +15,7 @@ Pocetna verzija web aplikacije koja procjenjuje mogucnost vidljivosti aurore iz 
 - prikazuje NOAA aurora mapu istog tipa kao na SWPC stranici
 - racuna BiH skor za Bihac, Banju Luku, Brcko i Tuzlu
 - bira najbolju referentnu lokaciju i okvirni termin za posmatranje
-- prima email pretplate i cuva ih lokalno
-- moze slati email alarme ako je SMTP konfigurisan
+- prikazuje BiH-orijentisan screening dashboard bez email alarm funkcije
 
 ## Vazna tehnicka napomena
 
@@ -32,61 +31,21 @@ npm run dev
 
 App ce biti na `http://127.0.0.1:3000`.
 
-## SMTP
-
-Ako zelis stvarne email alarme, popuni u `.env`:
-
-- `SMTP_HOST`
-- `SMTP_PORT`
-- `SMTP_SECURE`
-- `SMTP_USER`
-- `SMTP_PASS`
-- `SMTP_FROM`
-
-## Cloudflare Workers + D1 + Gmail API
+## Cloudflare Worker
 
 Cloudflare migracija sada koristi:
 
 - `src/worker.js` kao Worker entrypoint
-- `wrangler.jsonc` za assets, D1 binding i cron trigger
-- `migrations/0001_initial.sql` za D1 schema setup
-- `src/storage.js` kao D1 storage layer
-
-Za Cloudflare email delivery koristi se Gmail API, ne Resend. Potrebni secrets su:
+- `wrangler.jsonc` za assets i runtime vars
 
 - `NASA_API_KEY`
-- `GMAIL_CLIENT_ID`
-- `GMAIL_CLIENT_SECRET`
-- `GMAIL_REFRESH_TOKEN`
-- `GMAIL_SENDER_EMAIL`
-- `GMAIL_SENDER_NAME` opcionalno
-- `GMAIL_REPLY_TO` opcionalno
-- `ADMIN_TEST_TOKEN` za zasticeni `/api/test-email` endpoint
-
-Za dobijanje `GMAIL_REFRESH_TOKEN` mozes koristiti lokalni helper:
-
-```bash
-set GMAIL_CLIENT_ID=...
-set GMAIL_CLIENT_SECRET=...
-npm run gmail:oauth
-```
-
-Helper ce ispisati lokalni redirect URI i Google consent URL, te nakon odobrenja vratiti `refresh_token` u terminal.
 
 Osnovni deploy tok:
 
 ```bash
 npm install
 npx wrangler login
-npx wrangler d1 create aurora-chaser --location weur
-npx wrangler d1 migrations apply aurora-chaser --remote
 npx wrangler secret put NASA_API_KEY
-npx wrangler secret put GMAIL_CLIENT_ID
-npx wrangler secret put GMAIL_CLIENT_SECRET
-npx wrangler secret put GMAIL_REFRESH_TOKEN
-npx wrangler secret put GMAIL_SENDER_EMAIL
-npx wrangler secret put GMAIL_SENDER_NAME
-npx wrangler secret put ADMIN_TEST_TOKEN
 npx wrangler deploy
 ```
 
@@ -104,6 +63,5 @@ npx wrangler deploy
 
 - viewline overlay za Evropu/Balkan
 - posebna procjena sjevernog horizonta po reljefu i svjetlosnom zagadjenju
-- potvrda email adrese i unsubscribe flow
 - dnevni/nightly scheduler sa logikom protiv duplog spama
 - istorija alarma i graf Kp/Bz kroz noc

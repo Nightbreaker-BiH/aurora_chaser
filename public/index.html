@@ -30,7 +30,7 @@
           <button class="button ghost compact about-app-button" id="about-app-button" type="button">O aplikaciji</button>
           <div class="hero-actions">
             <a class="button solid" id="hero-primary-action" href="#location-panel">BiH vidljivost</a>
-            <a class="button ghost" id="hero-secondary-action" href="#email-panel">Email alarm</a>
+            <a class="button ghost" id="hero-secondary-action" href="#checklist-panel">Teren checklist</a>
           </div>
           <figure class="hero-banner">
             <img
@@ -335,7 +335,7 @@
           </div>
         </section>
 
-        <section class="panel checklist-panel">
+        <section class="panel checklist-panel" id="checklist-panel">
           <div class="panel-head">
             <div>
               <p class="panel-kicker">Go / No-Go</p>
@@ -508,36 +508,6 @@
               </article>
             </div>
           </div>
-        </section>
-
-        <section class="panel alert-panel" id="email-panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Ukljuci aurora alarme</p>
-              <h2>Email pretplata</h2>
-            </div>
-          </div>
-          <form id="email-form" class="email-form">
-            <label>
-              <span id="email-label">Email</span>
-              <input type="email" name="email" placeholder="ime@domena.com" required />
-            </label>
-            <label>
-              <span id="threshold-label">Prag alarma</span>
-              <select name="threshold">
-                <option value="possible">Moguce (preporuceno)</option>
-                <option value="watch">Pratiti ranije</option>
-                <option value="favorable">Samo jaci signal</option>
-              </select>
-            </label>
-            <button type="submit" class="button solid" id="subscription-submit">Sacuvaj pretplatu</button>
-            <p class="form-note" id="form-note">
-              Alarm salje mail kada procjena za BiH predje izabrani prag. Live slanje trenutno ide
-              preko Gmail API integracije na Cloudflare Workeru, ali dok je Google OAuth app u
-              Testing modu moze biti potrebna obnova tokena.
-            </p>
-            <p class="form-feedback" id="form-feedback"></p>
-          </form>
         </section>
 
         <section class="panel sources-panel">
