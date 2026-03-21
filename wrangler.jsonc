@@ -33,4 +33,5 @@
   // - wrangler secret put RESEND_API_KEY
   // - wrangler secret put RESEND_FROM
   // - wrangler secret put RESEND_REPLY_TO
+  // - wrangler secret put ADMIN_TEST_TOKEN
 }

@@ -24,6 +24,10 @@ function jsonError(status, error, message) {
   return jsonResponse({ error, message }, { status });
 }
 
+function validateEmailAddress(email) {
+  return Boolean(email) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 async function getStatus(env, { force = false } = {}) {
   const runtimeConfig = getWorkerRuntimeConfig(env);
   const cacheAgeMs = Date.now() - cachedAt;
@@ -104,7 +108,7 @@ async function handleSubscriptionRequest(request, env) {
   const email = String(body?.email ?? "").trim().toLowerCase();
   const threshold = String(body?.threshold ?? "possible").trim().toLowerCase();
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!validateEmailAddress(email)) {
     return jsonError(400, "INVALID_EMAIL", "Unesite validnu email adresu.");
   }
 
@@ -133,22 +137,13 @@ async function handleSubscriptionRequest(request, env) {
   );
 }
 
-async function sendNotificationViaResend(env, payload, notificationKey) {
+async function sendResendEmail(env, resendPayload, notificationKey) {
   if (!env.RESEND_API_KEY || !env.RESEND_FROM) {
     return {
       delivered: false,
       reason: "RESEND_API_KEY ili RESEND_FROM nije konfigurisan."
     };
   }
-
-  const message = buildAuroraEmailContent(payload);
-  const resendPayload = {
-    from: env.RESEND_FROM,
-    to: [payload.subscriber.email],
-    subject: message.subject,
-    text: message.text,
-    html: message.html
-  };
 
   if (env.RESEND_REPLY_TO) {
     resendPayload.reply_to = env.RESEND_REPLY_TO;
@@ -175,6 +170,98 @@ async function sendNotificationViaResend(env, payload, notificationKey) {
     delivered: true,
     providerMessageId: responseJson?.id || null
   };
+}
+
+async function sendNotificationViaResend(env, payload, notificationKey) {
+  const message = buildAuroraEmailContent(payload);
+  return sendResendEmail(
+    env,
+    {
+      from: env.RESEND_FROM,
+      to: [payload.subscriber.email],
+      subject: message.subject,
+      text: message.text,
+      html: message.html
+    },
+    notificationKey
+  );
+}
+
+function extractAdminToken(request) {
+  const authHeader = request.headers.get("authorization") || "";
+  if (authHeader.toLowerCase().startsWith("bearer ")) {
+    return authHeader.slice(7).trim();
+  }
+
+  return request.headers.get("x-admin-token") || "";
+}
+
+async function handleTestEmailRequest(request, env) {
+  if (!env.ADMIN_TEST_TOKEN) {
+    return jsonError(503, "TEST_EMAIL_DISABLED", "Admin test token nije konfigurisan.");
+  }
+
+  if (extractAdminToken(request) !== env.ADMIN_TEST_TOKEN) {
+    return jsonError(403, "FORBIDDEN", "Neispravan admin test token.");
+  }
+
+  const body = await readRequestJson(request);
+  const targetEmail = String(body?.email ?? "").trim().toLowerCase();
+
+  if (!validateEmailAddress(targetEmail)) {
+    return jsonError(400, "INVALID_EMAIL", "Unesite validnu email adresu za test.");
+  }
+
+  await upsertSubscriber(env, {
+    email: targetEmail,
+    threshold: "possible",
+    createdAt: new Date().toISOString()
+  });
+
+  const status = await getStatus(env, { force: true });
+  const testPayload = {
+    appMeta: APP_META,
+    subscriber: {
+      email: targetEmail,
+      threshold: "possible"
+    },
+    status
+  };
+  const message = buildAuroraEmailContent(testPayload);
+  const notificationKey = `test:${Date.now()}:${targetEmail}`;
+  const delivery = await sendResendEmail(
+    env,
+    {
+      from: env.RESEND_FROM,
+      to: [targetEmail],
+      subject: `[TEST] ${message.subject}`,
+      text: `TEST EMAIL\n\n${message.text}`,
+      html: `<p><strong>TEST EMAIL</strong></p>${message.html}`
+    },
+    notificationKey
+  );
+
+  await writeNotificationLog(env, notificationKey, {
+    email: targetEmail,
+    threshold: "possible",
+    sentAt: new Date().toISOString(),
+    score: status.summary.score,
+    site: status.summary.bestSite.name,
+    deliveryStatus: delivery.delivered ? "sent" : "failed",
+    providerMessageId: delivery.providerMessageId,
+    payload: {
+      type: "test-email",
+      targetEmail,
+      status
+    }
+  });
+
+  return jsonResponse({
+    ok: true,
+    targetEmail,
+    score: status.summary.score,
+    providerMessageId: delivery.providerMessageId
+  });
 }
 
 async function runNotificationCycle(env) {
@@ -214,7 +301,7 @@ async function runNotificationCycle(env) {
     }
 
     const payload = {
-      app: APP_META,
+      appMeta: APP_META,
       subscriber,
       status
     };
@@ -266,6 +353,10 @@ export default {
 
       if (request.method === "POST" && url.pathname === "/api/subscriptions") {
         return await handleSubscriptionRequest(request, env);
+      }
+
+      if (request.method === "POST" && url.pathname === "/api/test-email") {
+        return await handleTestEmailRequest(request, env);
       }
 
       return await serveStaticAsset(request, env);

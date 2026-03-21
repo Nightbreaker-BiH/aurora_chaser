@@ -58,6 +58,7 @@ Za Cloudflare email delivery koristi se Resend API, ne SMTP. Potrebni secrets su
 - `RESEND_API_KEY`
 - `RESEND_FROM`
 - `RESEND_REPLY_TO` opcionalno
+- `ADMIN_TEST_TOKEN` za zasticeni `/api/test-email` endpoint
 
 Osnovni deploy tok:
 
@@ -69,6 +70,7 @@ npx wrangler d1 migrations apply aurora-chaser --remote
 npx wrangler secret put NASA_API_KEY
 npx wrangler secret put RESEND_API_KEY
 npx wrangler secret put RESEND_FROM
+npx wrangler secret put ADMIN_TEST_TOKEN
 npx wrangler deploy
 ```
 
