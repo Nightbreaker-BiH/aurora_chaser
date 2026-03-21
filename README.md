@@ -43,7 +43,7 @@ Ako zelis stvarne email alarme, popuni u `.env`:
 - `SMTP_PASS`
 - `SMTP_FROM`
 
-## Cloudflare Workers + D1 + Resend
+## Cloudflare Workers + D1 + Gmail API
 
 Cloudflare migracija sada koristi:
 
@@ -52,12 +52,15 @@ Cloudflare migracija sada koristi:
 - `migrations/0001_initial.sql` za D1 schema setup
 - `src/storage.js` kao D1 storage layer
 
-Za Cloudflare email delivery koristi se Resend API, ne SMTP. Potrebni secrets su:
+Za Cloudflare email delivery koristi se Gmail API, ne Resend. Potrebni secrets su:
 
 - `NASA_API_KEY`
-- `RESEND_API_KEY`
-- `RESEND_FROM`
-- `RESEND_REPLY_TO` opcionalno
+- `GMAIL_CLIENT_ID`
+- `GMAIL_CLIENT_SECRET`
+- `GMAIL_REFRESH_TOKEN`
+- `GMAIL_SENDER_EMAIL`
+- `GMAIL_SENDER_NAME` opcionalno
+- `GMAIL_REPLY_TO` opcionalno
 - `ADMIN_TEST_TOKEN` za zasticeni `/api/test-email` endpoint
 
 Osnovni deploy tok:
@@ -68,8 +71,11 @@ npx wrangler login
 npx wrangler d1 create aurora-chaser --location weur
 npx wrangler d1 migrations apply aurora-chaser --remote
 npx wrangler secret put NASA_API_KEY
-npx wrangler secret put RESEND_API_KEY
-npx wrangler secret put RESEND_FROM
+npx wrangler secret put GMAIL_CLIENT_ID
+npx wrangler secret put GMAIL_CLIENT_SECRET
+npx wrangler secret put GMAIL_REFRESH_TOKEN
+npx wrangler secret put GMAIL_SENDER_EMAIL
+npx wrangler secret put GMAIL_SENDER_NAME
 npx wrangler secret put ADMIN_TEST_TOKEN
 npx wrangler deploy
 ```

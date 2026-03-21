@@ -30,8 +30,11 @@
   }
   // Set secrets with Wrangler before production deploy:
   // - wrangler secret put NASA_API_KEY
-  // - wrangler secret put RESEND_API_KEY
-  // - wrangler secret put RESEND_FROM
-  // - wrangler secret put RESEND_REPLY_TO
+  // - wrangler secret put GMAIL_CLIENT_ID
+  // - wrangler secret put GMAIL_CLIENT_SECRET
+  // - wrangler secret put GMAIL_REFRESH_TOKEN
+  // - wrangler secret put GMAIL_SENDER_EMAIL
+  // - wrangler secret put GMAIL_SENDER_NAME
+  // - wrangler secret put GMAIL_REPLY_TO
   // - wrangler secret put ADMIN_TEST_TOKEN
 }

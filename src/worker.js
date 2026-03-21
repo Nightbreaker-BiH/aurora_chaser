@@ -1,7 +1,8 @@
 import { fetchApod } from "./apodService.js";
 import { buildAuroraStatus } from "./auroraService.js";
 import { APP_META, getWorkerRuntimeConfig } from "./config.js";
-import { buildAuroraEmailContent } from "./emailService.js";
+import { buildAuroraEmailContent } from "./emailContent.js";
+import { isGmailConfigured, sendGmailEmail } from "./gmailService.js";
 import { listSubscribers, upsertSubscriber, wasNotificationSent, writeNotificationLog } from "./storage.js";
 
 let cachedStatus = null;
@@ -122,7 +123,7 @@ async function handleSubscriptionRequest(request, env) {
     createdAt: new Date().toISOString()
   });
 
-  const emailReady = Boolean(env.RESEND_API_KEY && env.RESEND_FROM);
+  const emailReady = isGmailConfigured(env);
 
   return jsonResponse(
     {
@@ -130,54 +131,18 @@ async function handleSubscriptionRequest(request, env) {
       subscription: record,
       emailReady,
       message: emailReady
-        ? "Pretplata sacuvana. Worker scheduled delivery je spreman preko Resend integracije."
-        : "Pretplata sacuvana. Worker/D1 migracija je spremna, ali Resend secrets jos nisu povezani."
+        ? "Pretplata sacuvana. Worker scheduled delivery je spreman preko Gmail API integracije."
+        : "Pretplata sacuvana. Worker/D1 migracija je spremna, ali Gmail API secrets jos nisu povezani."
     },
     { status: 201 }
   );
 }
 
-async function sendResendEmail(env, resendPayload, notificationKey) {
-  if (!env.RESEND_API_KEY || !env.RESEND_FROM) {
-    return {
-      delivered: false,
-      reason: "RESEND_API_KEY ili RESEND_FROM nije konfigurisan."
-    };
-  }
-
-  if (env.RESEND_REPLY_TO) {
-    resendPayload.reply_to = env.RESEND_REPLY_TO;
-  }
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${env.RESEND_API_KEY}`,
-      "Idempotency-Key": notificationKey
-    },
-    body: JSON.stringify(resendPayload)
-  });
-
-  if (!response.ok) {
-    const responseText = await response.text();
-    throw new Error(`Resend delivery failed: ${response.status} ${responseText}`);
-  }
-
-  const responseJson = await response.json();
-
-  return {
-    delivered: true,
-    providerMessageId: responseJson?.id || null
-  };
-}
-
-async function sendNotificationViaResend(env, payload, notificationKey) {
+async function sendNotificationViaGmail(env, payload, notificationKey) {
   const message = buildAuroraEmailContent(payload);
-  return sendResendEmail(
+  return sendGmailEmail(
     env,
     {
-      from: env.RESEND_FROM,
       to: [payload.subscriber.email],
       subject: message.subject,
       text: message.text,
@@ -199,6 +164,10 @@ function extractAdminToken(request) {
 async function handleTestEmailRequest(request, env) {
   if (!env.ADMIN_TEST_TOKEN) {
     return jsonError(503, "TEST_EMAIL_DISABLED", "Admin test token nije konfigurisan.");
+  }
+
+  if (!isGmailConfigured(env)) {
+    return jsonError(503, "EMAIL_NOT_CONFIGURED", "Gmail API secrets nisu kompletno konfigurirani.");
   }
 
   if (extractAdminToken(request) !== env.ADMIN_TEST_TOKEN) {
@@ -229,10 +198,9 @@ async function handleTestEmailRequest(request, env) {
   };
   const message = buildAuroraEmailContent(testPayload);
   const notificationKey = `test:${Date.now()}:${targetEmail}`;
-  const delivery = await sendResendEmail(
+  const delivery = await sendGmailEmail(
     env,
     {
-      from: env.RESEND_FROM,
       to: [targetEmail],
       subject: `[TEST] ${message.subject}`,
       text: `TEST EMAIL\n\n${message.text}`,
@@ -281,8 +249,8 @@ async function runNotificationCycle(env) {
     return summary;
   }
 
-  if (!env.RESEND_API_KEY || !env.RESEND_FROM) {
-    console.warn("Scheduled notification cycle skipped: RESEND_API_KEY or RESEND_FROM is not configured.");
+  if (!isGmailConfigured(env)) {
+    console.warn("Scheduled notification cycle skipped: Gmail API secrets are not fully configured.");
     summary.skippedNoDelivery = subscribers.length;
     return summary;
   }
@@ -307,7 +275,7 @@ async function runNotificationCycle(env) {
     };
 
     try {
-      const delivery = await sendNotificationViaResend(env, payload, notificationKey);
+      const delivery = await sendNotificationViaGmail(env, payload, notificationKey);
       await writeNotificationLog(env, notificationKey, {
         email: subscriber.email,
         threshold: subscriber.threshold,
