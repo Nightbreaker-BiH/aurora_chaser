@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="bs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AuroraChaser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <h1>AuroraChaser</h1>
+          <div class="hero-meta-row">
+            <p class="author" id="author-label">Autor: Alan Catovic</p>
+            <div class="lang-switch" role="group" aria-label="Prekidac jezika">
+              <button class="lang-button is-active" id="lang-bs" type="button" data-lang="bs">BOS</button>
+              <button class="lang-button" id="lang-en" type="button" data-lang="en">ENG</button>
+            </div>
+          </div>
+          <p class="lede" id="hero-lede">
+            NOAA aurora mapa, KP/HPI/MAG/CME podaci i BiH nocni uslovi u jednom dashboardu.
+          </p>
+          <button class="button ghost compact about-app-button" id="about-app-button" type="button">O aplikaciji</button>
+          <div class="hero-actions">
+            <a class="button solid" id="hero-primary-action" href="#location-panel">BiH vidljivost</a>
+            <a class="button ghost" id="hero-secondary-action" href="#email-panel">Email alarm</a>
+          </div>
+          <figure class="hero-banner">
+            <img
+              src="/aurora-hero.jpg"
+              id="hero-banner-image"
+              alt="AuroraChaser hero ilustracija za Bosnu i Hercegovinu"
+              onerror="this.style.display='none'"
+            />
+          </figure>
+        </div>
+        <div class="hero-panel">
+          <div class="status-ribbon" id="status-ribbon">Ucitavanje...</div>
+          <div class="score-cluster">
+            <span class="score-value" id="score-value">--</span>
+            <span class="score-label">BiH skor za veceras</span>
+          </div>
+          <p class="score-summary" id="score-summary">Citanje NOAA, NASA i weather feedova...</p>
+          <div class="hero-metrics">
+            <article class="hero-metric">
+              <span>Current KP</span>
+              <strong id="hero-kp">--</strong>
+            </article>
+            <article class="hero-metric">
+              <span>Max KP 24h</span>
+              <strong id="hero-kp-max">--</strong>
+            </article>
+            <article class="hero-metric">
+              <span>HPI</span>
+              <strong id="hero-hpi">--</strong>
+            </article>
+            <article class="hero-metric">
+              <span>Solar wind</span>
+              <strong id="hero-speed">--</strong>
+            </article>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="panel location-panel" id="location-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Lokacija i auroralna vidljivost</p>
+              <h2>BiH vidljivost po lokaciji</h2>
+            </div>
+            <button class="button ghost compact" id="locate-me" type="button">Koristi moju lokaciju</button>
+          </div>
+          <div class="location-card" id="location-card">
+            <p class="location-title" id="location-title">Preporucena lokacija za BiH</p>
+            <p class="location-summary" id="location-summary">Ucitavanje...</p>
+            <div class="location-grid" id="location-grid"></div>
+          </div>
+        </section>
+
+        <section class="panel map-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Aktuelna aurora prognoza</p>
+              <h2>NOAA Aurora 30-minute mapa</h2>
+            </div>
+            <a href="https://www.swpc.noaa.gov/products/aurora-30-minute-forecast" target="_blank" rel="noreferrer">NOAA izvor</a>
+          </div>
+          <figure class="map-frame">
+            <img
+              id="aurora-map"
+              alt="NOAA northern hemisphere aurora map"
+              src="https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg"
+            />
+          </figure>
+          <p class="map-caption" id="map-caption">
+            NOAA OVATION mapa za sjevernu hemisferu, sa BiH interpretacijom u ostatku dashboarda.
+          </p>
+        </section>
+
+        <section class="panel viewline-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">NOAA kontekst proizvod</p>
+              <h2>NOAA viewline panel</h2>
+            </div>
+            <a id="viewline-source" href="https://www.swpc.noaa.gov/products/aurora-viewline-tonight-and-tomorrow-night-experimental" target="_blank" rel="noreferrer">NOAA viewline</a>
+          </div>
+          <div class="viewline-grid">
+            <figure class="weather-sat-frame">
+              <img
+                id="viewline-tonight"
+                alt="NOAA tonight aurora viewline"
+                src="https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tonights_static_viewline_forecast.png"
+              />
+              <figcaption class="panel-note" id="viewline-tonight-caption">Tonight</figcaption>
+            </figure>
+            <figure class="weather-sat-frame">
+              <img
+                id="viewline-tomorrow"
+                alt="NOAA tomorrow night aurora viewline"
+                src="https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tomorrow_nights_static_viewline_forecast.png"
+              />
+              <figcaption class="panel-note" id="viewline-tomorrow-caption">Tomorrow night</figcaption>
+            </figure>
+          </div>
+          <p class="panel-note" id="viewline-caveat">
+            Za BiH ovo nije direktna lokalna mapa nego referenca na jacinu dogadjaja.
+          </p>
+        </section>
+
+        <section class="panel outlook-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Prognoza auroralne aktivnosti</p>
+              <h2>BiH outlook</h2>
+            </div>
+          </div>
+          <div class="outlook-grid">
+            <article class="outlook-card" id="tonight-card"></article>
+            <article class="outlook-card" id="tomorrow-card"></article>
+          </div>
+          <div class="quick-sites-grid">
+            <article class="outlook-card quick-site-card" id="sarajevo-card"></article>
+            <article class="outlook-card quick-site-card" id="north-site-card"></article>
+          </div>
+        </section>
+
+        <section class="panel five-day-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Sira prognoza</p>
+              <h2>Narednih 5 dana</h2>
+            </div>
+          </div>
+          <div class="five-day-grid" id="five-day-grid"></div>
+          <p class="panel-note" id="five-day-note">Narednih 5 dana koriste NOAA 45-day `Ap` guidance kao planerski proxy, ne kao operativni nocni alarm.</p>
+        </section>
+
+        <section class="panel quality-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Povjerenje i svjezina</p>
+              <h2>Svjezina feeda</h2>
+            </div>
+          </div>
+          <div class="quality-layout">
+            <div class="quality-content">
+              <div class="quality-summary" id="quality-summary"></div>
+              <div class="quality-list" id="quality-list"></div>
+            </div>
+            <article class="quality-visual apod-card" aria-live="polite">
+              <div class="apod-head">
+                <div>
+                  <span class="metric-label">NASA APOD</span>
+                  <h3 id="apod-title">Astronomy Picture of the Day</h3>
+                </div>
+                <a id="apod-link" href="https://apod.nasa.gov/apod/astropix.html" target="_blank" rel="noreferrer">NASA APOD</a>
+              </div>
+              <div class="apod-body">
+                <figure class="apod-media" id="apod-media">
+                  <img id="apod-image" alt="NASA Astronomy Picture of the Day" />
+                  <figcaption class="apod-placeholder" id="apod-placeholder">Ucitavanje APOD feeda...</figcaption>
+                </figure>
+                <div class="apod-copy">
+                  <p class="site-meta" id="apod-date">NASA APOD feed se ucitava...</p>
+                  <p class="site-meta apod-explanation" id="apod-explanation">
+                    Dnevna NASA astronomska slika ce se prikazati ovdje kao dodatni vizuelni kontekst.
+                  </p>
+                  <p class="site-meta" id="apod-credit">Izvor: NASA Astronomy Picture of the Day.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel kp-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">KP indeks i geomagnetna aktivnost</p>
+              <h2>KP monitor</h2>
+            </div>
+          </div>
+          <div class="metric-grid four">
+            <article class="metric-card">
+              <span class="metric-label">Current KP</span>
+              <strong id="kp-value">--</strong>
+              <small id="kp-scale">--</small>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Max KP (24h)</span>
+              <strong id="kp-max-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Tonight max KP</span>
+              <strong id="kp-tonight-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Tomorrow max KP</span>
+              <strong id="kp-tomorrow-value">--</strong>
+            </article>
+          </div>
+          <div class="chart-card">
+            <h3>Observed KP 24h</h3>
+            <div class="spark-chart" id="kp-observed-chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Forecast bins</h3>
+            <div class="spark-chart" id="kp-forecast-chart"></div>
+          </div>
+        </section>
+
+        <section class="panel hpi-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Auroralni indeks snage</p>
+              <h2>HPI monitor</h2>
+            </div>
+          </div>
+          <div class="metric-grid three">
+            <article class="metric-card">
+              <span class="metric-label">Current HPI North</span>
+              <strong id="hpi-value">--</strong>
+              <small id="hpi-status">--</small>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Current HPI South</span>
+              <strong id="hpi-south-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Max HPI 24h</span>
+              <strong id="hpi-max-value">--</strong>
+            </article>
+          </div>
+          <div class="chart-card">
+            <h3>North HPI 24h</h3>
+            <div class="area-chart" id="hpi-chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Understanding Aurora Power</h3>
+            <div class="threshold-grid" id="hpi-threshold-grid">
+              <div class="threshold-card">
+                <p class="threshold-title">HPI meaning</p>
+                <p>HPI mjeri energiju unesenu u auroralni oval. Veci broj GW obicno znaci jacu auroralnu aktivnost.</p>
+              </div>
+              <div class="threshold-card">
+                <p class="threshold-title">Power thresholds</p>
+                <p>10-20 GW: slabo</p>
+                <p>20-40 GW: umjereno</p>
+                <p>40-80 GW: jako</p>
+                <p>80+ GW: vrlo jako</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel mag-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Solarni vjetar i magnetno polje</p>
+              <h2>MAG / plasma</h2>
+            </div>
+          </div>
+          <div class="metric-grid four">
+            <article class="metric-card">
+              <span class="metric-label">Bz</span>
+              <strong id="bz-value">--</strong>
+              <small id="bz-status">--</small>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Solar wind</span>
+              <strong id="speed-value">--</strong>
+              <small id="speed-status">--</small>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Density</span>
+              <strong id="density-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">L1 delay</span>
+              <strong id="delay-value">--</strong>
+            </article>
+          </div>
+          <div class="chart-card">
+            <h3>Solar wind speed 24h</h3>
+            <div class="spark-chart" id="speed-chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Bz trend 24h</h3>
+            <div class="spark-chart negative" id="bz-chart"></div>
+          </div>
+        </section>
+
+        <section class="panel cme-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Najnoviji koronalni izbacaji mase</p>
+              <h2>CME monitor</h2>
+            </div>
+          </div>
+          <div class="cme-grid">
+            <div class="cme-box" id="cme-latest"></div>
+            <div class="cme-box" id="cme-stats"></div>
+          </div>
+          <div class="list-card">
+            <h3>Skorasnji CME dogadjaji (7 dana)</h3>
+            <div id="cme-recent"></div>
+          </div>
+        </section>
+
+        <section class="panel checklist-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Go / No-Go</p>
+              <h2>Teren checklist</h2>
+            </div>
+          </div>
+          <div class="checklist-summary" id="checklist-summary"></div>
+          <div class="checklist-list" id="checklist-list"></div>
+        </section>
+
+        <section class="panel moon-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Faza Mjeseca</p>
+              <h2>Mjesec i tamno nebo</h2>
+            </div>
+          </div>
+          <div class="metric-grid four moon-metrics">
+            <article class="metric-card">
+              <span class="metric-label">Faza</span>
+              <strong id="moon-phase">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Illumination</span>
+              <strong id="moon-illumination">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Moon rise</span>
+              <strong id="moon-rise">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Moon set</span>
+              <strong id="moon-set">--</strong>
+            </article>
+          </div>
+          <div class="moon-visual" id="moon-visual"></div>
+          <p class="panel-note" id="moon-note"></p>
+        </section>
+
+        <section class="panel modes-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Golo oko vs kamera</p>
+              <h2>Kako posmatrati</h2>
+            </div>
+          </div>
+          <div class="mode-tabs" role="tablist" aria-label="Kartice nacina posmatranja">
+            <button class="info-tab is-active" type="button" data-mode-tab="visual" aria-selected="true">Golo oko</button>
+            <button class="info-tab" type="button" data-mode-tab="camera" aria-selected="false">Kamera</button>
+          </div>
+          <div class="mode-panel is-active" data-mode-panel="visual">
+            <div class="mode-stack">
+              <div class="mode-card" id="visual-mode-card"></div>
+              <div class="mode-card mode-tip-card" id="visual-mode-tip-card"></div>
+              <div class="mode-card mode-check-card" id="visual-mode-check-card"></div>
+            </div>
+          </div>
+          <div class="mode-panel" data-mode-panel="camera" hidden>
+            <div class="mode-stack">
+              <div class="mode-card" id="camera-mode-card"></div>
+              <div class="mode-card mode-tip-card" id="camera-mode-tip-card"></div>
+              <div class="mode-card mode-check-card" id="camera-mode-check-card"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel weather-sat-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Satelitski prikaz oblaka</p>
+              <h2>Satelitski snimak iznad BiH / HR / SI</h2>
+            </div>
+            <a href="https://en.allmetsat.com/images/msg_italia_ir039.php" target="_blank" rel="noreferrer">Meteosat IR</a>
+          </div>
+          <figure class="weather-sat-frame satellite-frame">
+            <img
+              id="weather-sat-image"
+              alt="Meteosat infracrveni snimak oblaka iznad Slovenije, Hrvatske, Bosne i Hercegovine i sjevernog Jadrana"
+              src="https://img.allmetsat.com/sat/msg_fes-italia-ir039.jpg"
+            />
+          </figure>
+          <p class="panel-note" id="weather-sat-note">
+            Siri infrared cloud-top kadar za Sloveniju, Hrvatsku i BiH, koristan za nocnu procjenu oblacnosti.
+          </p>
+        </section>
+
+        <section class="panel sites-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Opticki sloj BiH lokacija</p>
+              <h2>BiH referentne lokacije</h2>
+            </div>
+          </div>
+          <p class="panel-note" id="sites-note">Svaka lokacija sada nosi i opticki sloj: otvorenost sjevernog horizonta i procjenu svjetlosnog zagadjenja.</p>
+          <div class="sites-list" id="sites-list"></div>
+        </section>
+
+        <section class="panel explain-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Razumijevanje solarne aktivnosti i aurore</p>
+              <h2>Sta znace ove varijable</h2>
+            </div>
+          </div>
+          <div class="info-tabs" role="tablist" aria-label="Kartice informacija o aurori">
+            <button class="info-tab is-active" type="button" data-tab="variables" aria-selected="true">Varijable</button>
+            <button class="info-tab" type="button" data-tab="phenomenology" aria-selected="false">Fenomenologija</button>
+          </div>
+          <div class="info-panel is-active" data-panel="variables">
+            <div class="explain-grid" id="variables-grid">
+              <article class="explain-card">
+                <h3>Magnetic Field</h3>
+                <p>Bz komponenta medjuplanetarnog magnetnog polja je kljucna za auroru. Negativan Bz olaksava spajanje sa Zemljinim poljem i pojacava auroralni odgovor.</p>
+              </article>
+              <article class="explain-card">
+                <h3>Solar Wind</h3>
+                <p>Solarni vjetar je tok cestica sa Sunca. Brzina, gustina i orijentacija magnetnog polja odredjuju koliko energije ulazi u magnetosferu.</p>
+              </article>
+              <article class="explain-card">
+                <h3>Propagation Delay</h3>
+                <p>Mjerenja dolaze sa L1 tacke oko 1.5 miliona km od Zemlje, pa postoji kasnjenje izmedju mjerenja i ulaska poremecaja u Zemljinu okolinu.</p>
+              </article>
+              <article class="explain-card">
+                <h3>KP Index</h3>
+                <p>KP je globalni indeks geomagnetne aktivnosti od 0 do 9. Za BiH je cesto potreban KP 6-7 ili vise, uz povoljan Bz i vedar sjeverni horizont.</p>
+              </article>
+              <article class="explain-card">
+                <h3>NOAA Geomagnetic Scales</h3>
+                <p>G1 je priblizno KP 5, G2 oko KP 6, G3 oko KP 7, a G4-G5 su vrlo jake oluje koje guraju auroralni oval ka srednjim geografskim sirinama.</p>
+              </article>
+              <article class="explain-card">
+                <h3>Aurora Viewing Tips</h3>
+                <p>Prati forecast redovno, idi na tamnu lokaciju dalje od gradskog svjetla i ciljaj 22:00-02:00 sa otvorenim sjevernim horizontom.</p>
+              </article>
+            </div>
+          </div>
+          <div class="info-panel" data-panel="phenomenology" hidden>
+            <div class="guide-grid" id="phenomenology-grid">
+              <article class="guide-card guide-card-wide">
+                <h3>Sta je aurora</h3>
+                <p>Aurora je opticki trag talozenja energije u gornjoj atmosferi. Naelektrisane cestice iz Suncevog vjetra ulaze duz magnetnih silnica, pobudjuju kiseonik i azot, a atmosfera zatim emituje svjetlost.</p>
+              </article>
+              <article class="guide-card">
+                <h3>Boje i visine</h3>
+                <p>Zelena je najcesca i vezana je uglavnom za kiseonik na oko 100-150 km. Crvena se javlja vise i slabija je, dok ljubicaste i plave komponente cesto dolaze od azota u dinamicnijim strukturama.</p>
+              </article>
+              <article class="guide-card">
+                <h3>Solar Cycle 25</h3>
+                <p>Pojacana solarna aktivnost znaci vise baklji, CME-ova i povoljnijih uslova za jace geomagnetne oluje. Zato su godine oko maksimuma ciklusa najzanimljivije za nize geografske sirine.</p>
+              </article>
+              <article class="guide-card">
+                <h3>Zasto je teska za BiH</h3>
+                <p>BiH je daleko juznije od standardnog auroralnog ovala, pa je za vizuelnu pojavu obicno potreban jak geomagnetni poremecaj i znacajno pomjeranje ovala prema jugu. Zato je otvoren sjeverni horizont presudan.</p>
+              </article>
+              <article class="guide-card">
+                <h3>Kada gledati</h3>
+                <p>Najbolji prozor je lokalna noc, posebno 22:00-02:00. Vedro nebo, manji Mjesec i periodi oko ekvinocija dodatno povecavaju sansu da isti KP zaista bude upotrebljiv za posmatranje.</p>
+              </article>
+              <article class="guide-card">
+                <h3>Kako izgleda u praksi</h3>
+                <p>Na BiH sirinama aurora se cesto prvo vidi kao slab sjeverni luk, difuzno zelenilo ili niski stubovi. Kamera cesto pokazuje vise boje i kontrasta nego ljudsko oko.</p>
+              </article>
+              <article class="guide-card">
+                <h3>Kako citati dashboard</h3>
+                <p>NOAA mapa daje kratkorocni raspored ovala, KP daje globalnu jacinu oluje, Bz govori da li je magnetna kapija otvorena, HPI mjeri energiju, a cloud i moon filter govore da li BiH uopste ima opticke uslove.</p>
+              </article>
+              <article class="guide-card">
+                <h3>Kontrolna lista za BiH</h3>
+                <p>Trazi negativan Bz, solarni vjetar barem oko 500 km/s, KP prema 6-7, nisku oblacnost prema sjeveru i lokaciju van urbanog sjaja. Tek kombinacija tih faktora daje realan izlazak na teren.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel alert-panel" id="email-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Ukljuci aurora alarme</p>
+              <h2>Email pretplata</h2>
+            </div>
+          </div>
+          <form id="email-form" class="email-form">
+            <label>
+              <span id="email-label">Email</span>
+              <input type="email" name="email" placeholder="ime@domena.com" required />
+            </label>
+            <label>
+              <span id="threshold-label">Prag alarma</span>
+              <select name="threshold">
+                <option value="possible">Moguce (preporuceno)</option>
+                <option value="watch">Pratiti ranije</option>
+                <option value="favorable">Samo jaci signal</option>
+              </select>
+            </label>
+            <button type="submit" class="button solid" id="subscription-submit">Sacuvaj pretplatu</button>
+            <p class="form-note" id="form-note">
+              Alarm salje mail kada procjena za BiH predje izabrani prag. Za stvarni outgoing mail
+              treba SMTP konfiguracija u `.env`.
+            </p>
+            <p class="form-feedback" id="form-feedback"></p>
+          </form>
+        </section>
+
+        <section class="panel sources-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Reference</p>
+              <h2>Izvori i feedovi</h2>
+            </div>
+          </div>
+          <ul id="sources-list" class="sources-list"></ul>
+        </section>
+      </main>
+    </div>
+
+    <div class="app-modal" id="about-app-modal" hidden>
+      <div class="app-modal-card" role="dialog" aria-modal="true" aria-labelledby="about-app-title">
+        <div class="app-modal-head">
+          <div>
+            <p class="eyebrow" id="about-app-kicker">O aplikaciji</p>
+            <h2 id="about-app-title">Sta AuroraChaser radi</h2>
+          </div>
+          <button class="app-modal-close" id="about-app-close" type="button" aria-label="Zatvori">Zatvori</button>
+        </div>
+        <p class="app-modal-intro" id="about-app-intro">
+          AuroraChaser je BiH-orijentisan operativni dashboard za procjenu da li auroru vrijedi pratiti iz Bosne i Hercegovine u datoj noci.
+        </p>
+        <div class="app-modal-body" id="about-app-body"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

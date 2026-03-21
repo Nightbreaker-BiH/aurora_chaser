@@ -1,0 +1,537 @@
+{
+  "app": {
+    "name": "AuroraChaser",
+    "author": "Alan Catovic",
+    "region": "Bosna i Hercegovina",
+    "description": "Aurora alarm za BiH koji kombinuje NOAA aurora mapu, geomagnetne indikatore, nocne uslove i oblacnost."
+  },
+  "updatedAt": "2026-03-20T21:20:00.000Z",
+  "auroraMap": {
+    "sourceUrl": "https://www.swpc.noaa.gov/products/aurora-30-minute-forecast",
+    "imageUrl": "https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg",
+    "observationTime": "2026-03-20T21:15:00Z",
+    "forecastTime": "2026-03-20T21:45:00Z"
+  },
+  "viewline": {
+    "sourceUrl": "https://www.swpc.noaa.gov/products/aurora-viewline-tonight-and-tomorrow-night-experimental",
+    "tonightImageUrl": "https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tonights_static_viewline_forecast.png",
+    "tomorrowImageUrl": "https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tomorrow_nights_static_viewline_forecast.png",
+    "caveat": "Za BiH nije direktna karta vidljivosti; koristi ga kao kontekst jacine, ne kao lokalnu mapu."
+  },
+  "current": {
+    "kp": 3.3,
+    "kpLabel": "3.3",
+    "kpMax24h": 4,
+    "kpMax24hLabel": "4.0",
+    "noaaScale": "Quiet",
+    "solarWindSpeed": 472.8,
+    "solarWindSpeedLabel": "473 km/s",
+    "solarWindStatus": "Umjereno",
+    "density": 4.4,
+    "densityLabel": "4.4 cm^-3",
+    "bz": 9,
+    "bzLabel": "9.0 nT",
+    "bzStatus": "Neutralno",
+    "hpiNorthGw": 24,
+    "hpiNorthLabel": "24.0 GW",
+    "hpiSouthGw": 24,
+    "hpiSouthLabel": "24.0 GW",
+    "hpiMax24h": 24,
+    "hpiMax24hLabel": "24.0 GW",
+    "hpiStatus": "Umjereno",
+    "propagationDelayMinutes": 53,
+    "propagationDelayLabel": "53 min"
+  },
+  "summary": {
+    "score": 18,
+    "level": "unlikely",
+    "levelLabel": "Malo vjerovatno",
+    "bestSite": {
+      "id": "bihac",
+      "name": "Bihac",
+      "lat": 44.8167,
+      "lon": 15.8708,
+      "note": "Najkorisniji sjeverozapadni profil za BiH."
+    },
+    "bestWindowLabel": "21. 3. u 00:00",
+    "localNightKey": "20260320",
+    "message": "Trenutni geomagnetni uslovi nisu dovoljno jaki za vjerovatnu vidljivost iz BiH."
+  },
+  "outlooks": {
+    "tonight": {
+      "label": "Veceras",
+      "score": 21,
+      "level": "unlikely",
+      "levelLabel": "Malo vjerovatno",
+      "bestSiteName": "Bihac",
+      "bestWindowLabel": "21. 3. u 00:00",
+      "maxForecastKp": 5,
+      "avgForecastKp": 4.6,
+      "cloudCover": 0,
+      "precipProbability": 0,
+      "windowStartLabel": "20. 3. u 18:00",
+      "windowEndLabel": "21. 3. u 03:00"
+    },
+    "tomorrow": {
+      "label": "Sutra navecer",
+      "score": 12,
+      "level": "unlikely",
+      "levelLabel": "Malo vjerovatno",
+      "bestSiteName": "Brcko",
+      "bestWindowLabel": "22. 3. u 00:00",
+      "maxForecastKp": 4.7,
+      "avgForecastKp": 4.2,
+      "cloudCover": 0,
+      "precipProbability": 0,
+      "windowStartLabel": "21. 3. u 18:00",
+      "windowEndLabel": "22. 3. u 03:00"
+    }
+  },
+  "fiveDayOutlook": [
+    {
+      "dateIso": "2026-03-20T17:00:00.000Z",
+      "dateLabel": "20. mar",
+      "weekdayLabel": "pet",
+      "guidanceKpEquivalent": 5,
+      "guidanceKpEquivalentLabel": "5",
+      "ap": 44,
+      "apLabel": "44",
+      "score": 19,
+      "bestSiteName": "Bihac",
+      "bestWindowLabel": "21. 3. u 00:00",
+      "cloudCover": 0,
+      "moonInterferencePct": 3,
+      "tone": "quiet",
+      "toneLabel": "Tiho",
+      "guidanceLabel": "Ap->Kp proxy",
+      "guidanceDisclaimer": "Planerski signal iz NOAA 45-day Ap guidance; nije operativna nocna prognoza.",
+      "note": "Granican guidance signal; BiH i dalje zavisi od sjevernog horizonta i vedrine."
+    },
+    {
+      "dateIso": "2026-03-21T17:00:00.000Z",
+      "dateLabel": "21. mar",
+      "weekdayLabel": "sub",
+      "guidanceKpEquivalent": 6,
+      "guidanceKpEquivalentLabel": "6",
+      "ap": 50,
+      "apLabel": "50",
+      "score": 28,
+      "bestSiteName": "Brcko",
+      "bestWindowLabel": "22. 3. u 00:00",
+      "cloudCover": 0,
+      "moonInterferencePct": 9,
+      "tone": "elevated",
+      "toneLabel": "Povisen signal",
+      "guidanceLabel": "Ap->Kp proxy",
+      "guidanceDisclaimer": "Planerski signal iz NOAA 45-day Ap guidance; nije operativna nocna prognoza.",
+      "note": "Povisen geomagnetni signal u guidance proizvodu; za BiH i dalje treba potvrda kroz vecernji Kp/Bz/OVATION."
+    },
+    {
+      "dateIso": "2026-03-22T17:00:00.000Z",
+      "dateLabel": "22. mar",
+      "weekdayLabel": "ned",
+      "guidanceKpEquivalent": 5,
+      "guidanceKpEquivalentLabel": "5",
+      "ap": 30,
+      "apLabel": "30",
+      "score": 15,
+      "bestSiteName": "Tuzla",
+      "bestWindowLabel": "22. 3. u 23:00",
+      "cloudCover": 1,
+      "moonInterferencePct": 17,
+      "tone": "quiet",
+      "toneLabel": "Tiho",
+      "guidanceLabel": "Ap->Kp proxy",
+      "guidanceDisclaimer": "Planerski signal iz NOAA 45-day Ap guidance; nije operativna nocna prognoza.",
+      "note": "Granican guidance signal; BiH i dalje zavisi od sjevernog horizonta i vedrine."
+    },
+    {
+      "dateIso": "2026-03-23T17:00:00.000Z",
+      "dateLabel": "23. mar",
+      "weekdayLabel": "pon",
+      "guidanceKpEquivalent": 4,
+      "guidanceKpEquivalentLabel": "4",
+      "ap": 16,
+      "apLabel": "16",
+      "score": 4,
+      "bestSiteName": "Bihac",
+      "bestWindowLabel": "24. 3. u 03:00",
+      "cloudCover": 70,
+      "moonInterferencePct": 26,
+      "tone": "quiet",
+      "toneLabel": "Tiho",
+      "guidanceLabel": "Ap->Kp proxy",
+      "guidanceDisclaimer": "Planerski signal iz NOAA 45-day Ap guidance; nije operativna nocna prognoza.",
+      "note": "Tiha geomagnetna pozadina; tretiraj ovo kao planerski indikator, ne kao alarm."
+    },
+    {
+      "dateIso": "2026-03-24T17:00:00.000Z",
+      "dateLabel": "24. mar",
+      "weekdayLabel": "uto",
+      "guidanceKpEquivalent": 3,
+      "guidanceKpEquivalentLabel": "3",
+      "ap": 12,
+      "apLabel": "12",
+      "score": 2,
+      "bestSiteName": "Bihac",
+      "bestWindowLabel": "24. 3. u 22:00",
+      "cloudCover": 0,
+      "moonInterferencePct": 37,
+      "tone": "quiet",
+      "toneLabel": "Tiho",
+      "guidanceLabel": "Ap->Kp proxy",
+      "guidanceDisclaimer": "Planerski signal iz NOAA 45-day Ap guidance; nije operativna nocna prognoza.",
+      "note": "Tiha geomagnetna pozadina; tretiraj ovo kao planerski indikator, ne kao alarm."
+    }
+  ],
+  "moon": {
+    "siteName": "Bihac",
+    "illuminationPct": 3,
+    "illuminationFraction": 0.03,
+    "phase": 0.12,
+    "angle": -0.9,
+    "phaseLabel": "Rastuci srp",
+    "riseLabel": "06:17",
+    "setLabel": "20:10"
+  },
+  "dataQuality": {
+    "overall": {
+      "level": "high",
+      "label": "Visoko povjerenje",
+      "qualityScore": 86
+    },
+    "l1Proxy": {
+      "level": "fresh",
+      "label": "L1 proxy feed svjez",
+      "note": "Proxy indikator iz plasma+mag starosti; NOAA ne daje eksplicitnu fallback zastavicu u ovom feedu."
+    },
+    "feeds": [
+      {
+        "id": "ovation-observation",
+        "label": "OVATION observation",
+        "ageMinutes": 5,
+        "ageLabel": "5 min",
+        "freshness": "fresh",
+        "freshnessLabel": "Svjeze",
+        "timeLabel": "20. 3. u 22:15"
+      },
+      {
+        "id": "ovation-forecast",
+        "label": "OVATION forecast",
+        "ageMinutes": 0,
+        "ageLabel": "0 min",
+        "freshness": "fresh",
+        "freshnessLabel": "Svjeze",
+        "timeLabel": "20. 3. u 22:45"
+      },
+      {
+        "id": "kp",
+        "label": "Planetary Kp",
+        "ageMinutes": 180,
+        "ageLabel": "3 h",
+        "freshness": "fresh",
+        "freshnessLabel": "Svjeze",
+        "timeLabel": "20. 3. u 19:00"
+      },
+      {
+        "id": "plasma",
+        "label": "Solar wind plasma",
+        "ageMinutes": 9,
+        "ageLabel": "9 min",
+        "freshness": "fresh",
+        "freshnessLabel": "Svjeze",
+        "timeLabel": "20. 3. u 22:11"
+      },
+      {
+        "id": "mag",
+        "label": "Interplanetary magnetic field",
+        "ageMinutes": 6,
+        "ageLabel": "6 min",
+        "freshness": "fresh",
+        "freshnessLabel": "Svjeze",
+        "timeLabel": "20. 3. u 22:14"
+      },
+      {
+        "id": "hpi",
+        "label": "HPI",
+        "ageMinutes": 28,
+        "ageLabel": "28 min",
+        "freshness": "fresh",
+        "freshnessLabel": "Svjeze",
+        "timeLabel": "20. 3. u 21:52"
+      }
+    ]
+  },
+  "observationModes": {
+    "visual": {
+      "score": 6,
+      "label": "Malo vjerovatno",
+      "note": "Vizuelna detekcija je teska; golim okom vjerovatno nece biti uvjerljiv signal."
+    },
+    "camera": {
+      "score": 26,
+      "label": "Malo vjerovatno",
+      "note": "Kamera je korisnija od oka; probaj duzu ekspoziciju i sirok kadar prema sjeveru."
+    }
+  },
+  "checklist": {
+    "summary": {
+      "level": "no",
+      "label": "Ne izlaziti jos"
+    },
+    "items": [
+      {
+        "title": "Geomagnetni signal",
+        "value": "Kp sada 3.3 | veceras max 5.0",
+        "note": "Za BiH je tipicno potreban bar Kp oko 6 uz dodatnu podrsku Bz i vedrine.",
+        "level": "watch",
+        "label": "WATCH"
+      },
+      {
+        "title": "Bz smjer",
+        "value": "9.0 nT",
+        "note": "Negativan Bz otvara povoljniji coupling sa Zemljinim poljem.",
+        "level": "no",
+        "label": "NO-GO"
+      },
+      {
+        "title": "Solarni vjetar",
+        "value": "473 km/s",
+        "note": "Brzina sama nije dovoljna, ali ispod ~430-500 km/s BiH tesko dobija jak signal.",
+        "level": "watch",
+        "label": "WATCH"
+      },
+      {
+        "title": "Vrijeme na terenu",
+        "value": "0% cloud | 0% precip",
+        "note": "Najbolji punkt trenutno je Bihac.",
+        "level": "go",
+        "label": "GO"
+      },
+      {
+        "title": "Mjesec",
+        "value": "3% | Rastuci srp",
+        "note": "Mjeseceva svjetlost najvise smeta slabim niskim auroralnim strukturama.",
+        "level": "go",
+        "label": "GO"
+      },
+      {
+        "title": "Sjeverni horizont i svjetlo",
+        "value": "Otvoren sjever | Nize svjetlosno zagadjenje",
+        "note": "Opticka spremnost punkta je skoro jednako bitna kao i sam Kp na BiH sirinama.",
+        "level": "go",
+        "label": "GO"
+      }
+    ]
+  },
+  "kp": {
+    "observed24h": [
+      { "timeLabel": "16:00", "value": 0.67 },
+      { "timeLabel": "19:00", "value": 0.0 },
+      { "timeLabel": "22:00", "value": 0.33 },
+      { "timeLabel": "01:00", "value": 2.0 },
+      { "timeLabel": "04:00", "value": 2.67 },
+      { "timeLabel": "07:00", "value": 3.67 },
+      { "timeLabel": "10:00", "value": 3.67 },
+      { "timeLabel": "13:00", "value": 3.0 }
+    ],
+    "forecast3Day": [
+      { "timeLabel": "19:00-22:00", "value": 5.0 },
+      { "timeLabel": "22:00-01:00", "value": 5.0 },
+      { "timeLabel": "01:00-04:00", "value": 4.7 },
+      { "timeLabel": "04:00-07:00", "value": 4.3 }
+    ]
+  },
+  "hpi": {
+    "recent24h": [
+      { "timeLabel": "20:57", "northGw": 17, "southGw": 17 },
+      { "timeLabel": "21:09", "northGw": 18, "southGw": 18 },
+      { "timeLabel": "21:19", "northGw": 20, "southGw": 20 },
+      { "timeLabel": "21:33", "northGw": 22, "southGw": 21 },
+      { "timeLabel": "21:52", "northGw": 24, "southGw": 24 }
+    ]
+  },
+  "solarWind": {
+    "speedTrend": [
+      { "time": "2026-03-20T18:04:00.000Z", "value": 333.4 },
+      { "time": "2026-03-20T19:05:00.000Z", "value": 362.2 },
+      { "time": "2026-03-20T20:04:00.000Z", "value": 421.6 },
+      { "time": "2026-03-20T21:03:00.000Z", "value": 445.4 },
+      { "time": "2026-03-20T22:16:00.000Z", "value": 472.8 }
+    ],
+    "densityTrend": [
+      { "time": "2026-03-20T18:04:00.000Z", "value": 1.06 },
+      { "time": "2026-03-20T19:05:00.000Z", "value": 1.24 },
+      { "time": "2026-03-20T20:04:00.000Z", "value": 10.13 },
+      { "time": "2026-03-20T21:03:00.000Z", "value": 2.66 },
+      { "time": "2026-03-20T22:16:00.000Z", "value": 4.41 }
+    ],
+    "bzTrend": [
+      { "time": "2026-03-20T18:07:00.000Z", "value": 2.28 },
+      { "time": "2026-03-20T19:09:00.000Z", "value": 3.13 },
+      { "time": "2026-03-20T20:13:00.000Z", "value": -5.44 },
+      { "time": "2026-03-20T21:14:00.000Z", "value": 7.49 },
+      { "time": "2026-03-20T22:21:00.000Z", "value": 9.01 }
+    ]
+  },
+  "cme": {
+    "latest": null,
+    "recent": [],
+    "stats": {
+      "count7d": 0,
+      "earthImpactCount": 0,
+      "explicitImpactCount": 0,
+      "maxSpeed": 0,
+      "maxSpeedLabel": "0 km/s",
+      "maxPredictedKp": 0,
+      "maxPredictedKpLabel": "n/a"
+    }
+  },
+  "visibility": {
+    "bestSiteName": "Bihac",
+    "bestVisibilityLabel": "Malo vjerovatno",
+    "bestCloudCover": 0,
+    "bestPrecipProbability": 0,
+    "bestVisibilityKm": 33.3
+  },
+  "sites": [
+    {
+      "id": "bihac",
+      "name": "Bihac",
+      "lat": 44.8167,
+      "lon": 15.8708,
+      "note": "Najkorisniji sjeverozapadni profil za BiH.",
+      "northHorizonLabel": "Otvoren sjever",
+      "lightPollutionLabel": "Nize svjetlosno zagadjenje",
+      "opticsFactor": 0.97,
+      "score": 18,
+      "visibilityLabel": "Malo vjerovatno",
+      "bestWindowLabel": "21. 3. u 00:00",
+      "cloudCover": 0,
+      "lowCloudCover": 0,
+      "precipProbability": 0,
+      "visibilityKm": 33.3,
+      "sunAltitudeDeg": -45.21,
+      "auroraProbabilityNorth": 17,
+      "auroraLocalProbability": 0,
+      "auroraDistanceKm": 3208,
+      "auroraSignalLabel": "Vrlo daleko sjeverno",
+      "auroraSignalDetail": "Najjaci aktivni segment je oko 3208 km od lokacije i ne sugerise vizuelnu vidljivost sam po sebi.",
+      "reasons": ["Kp 3.3", "HPI 24.0 GW", "Bz 9.0 nT", "oblacnost 0%"]
+    },
+    {
+      "id": "banja-luka",
+      "name": "Banja Luka",
+      "lat": 44.7722,
+      "lon": 17.191,
+      "note": "Sjeverni horizont dobar za niske auroralne lukove.",
+      "northHorizonLabel": "Uglavnom otvoren sjever",
+      "lightPollutionLabel": "Umjereno gradsko svjetlo",
+      "opticsFactor": 0.89,
+      "score": 16,
+      "visibilityLabel": "Malo vjerovatno",
+      "bestWindowLabel": "21. 3. u 00:00",
+      "cloudCover": 0,
+      "lowCloudCover": 0,
+      "precipProbability": 0,
+      "visibilityKm": 28.6,
+      "sunAltitudeDeg": -45.27,
+      "auroraProbabilityNorth": 17,
+      "auroraLocalProbability": 0,
+      "auroraDistanceKm": 3175,
+      "auroraSignalLabel": "Vrlo daleko sjeverno",
+      "auroraSignalDetail": "Najjaci aktivni segment je oko 3175 km od lokacije i ne sugerise vizuelnu vidljivost sam po sebi.",
+      "reasons": ["Kp 3.3", "HPI 24.0 GW", "Bz 9.0 nT", "oblacnost 0%"]
+    },
+    {
+      "id": "brcko",
+      "name": "Brcko",
+      "lat": 44.8728,
+      "lon": 18.8106,
+      "note": "Najsevernija ravnicarska opcija u BiH.",
+      "northHorizonLabel": "Otvoren ravnicarski sjever",
+      "lightPollutionLabel": "Umjereno do poviseno svjetlo",
+      "opticsFactor": 0.88,
+      "score": 14,
+      "visibilityLabel": "Malo vjerovatno",
+      "bestWindowLabel": "21. 3. u 00:00",
+      "cloudCover": 22,
+      "lowCloudCover": 2,
+      "precipProbability": 0,
+      "visibilityKm": 19.8,
+      "sunAltitudeDeg": -45.13,
+      "auroraProbabilityNorth": 17,
+      "auroraLocalProbability": 0,
+      "auroraDistanceKm": 3093,
+      "auroraSignalLabel": "Vrlo daleko sjeverno",
+      "auroraSignalDetail": "Najjaci aktivni segment je oko 3093 km od lokacije i ne sugerise vizuelnu vidljivost sam po sebi.",
+      "reasons": ["Kp 3.3", "HPI 24.0 GW", "Bz 9.0 nT", "oblacnost 22%"]
+    },
+    {
+      "id": "sarajevo",
+      "name": "Sarajevo",
+      "lat": 43.8563,
+      "lon": 18.4131,
+      "note": "Centralna BiH, korisno za realnu vecernju dostupnost.",
+      "northHorizonLabel": "Ogranicen sjever zbog reljefa",
+      "lightPollutionLabel": "Jace gradsko svjetlo",
+      "opticsFactor": 0.72,
+      "score": 9,
+      "visibilityLabel": "Malo vjerovatno",
+      "bestWindowLabel": "20. 3. u 23:00",
+      "cloudCover": 48,
+      "lowCloudCover": 41,
+      "precipProbability": 0,
+      "visibilityKm": 34.4,
+      "sunAltitudeDeg": -44.56,
+      "auroraProbabilityNorth": 17,
+      "auroraLocalProbability": 0,
+      "auroraDistanceKm": 3240,
+      "auroraSignalLabel": "Vrlo daleko sjeverno",
+      "auroraSignalDetail": "Najjaci aktivni segment je oko 3240 km od lokacije i ne sugerise vizuelnu vidljivost sam po sebi.",
+      "reasons": ["Kp 3.3", "HPI 24.0 GW", "Bz 9.0 nT", "oblacnost 48%"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "noaa-aurora",
+      "name": "NOAA SWPC Aurora - 30 Minute Forecast",
+      "url": "https://www.swpc.noaa.gov/products/aurora-30-minute-forecast"
+    },
+    {
+      "id": "noaa-ovation-json",
+      "name": "NOAA SWPC OVATION latest JSON",
+      "url": "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json"
+    },
+    {
+      "id": "noaa-kp",
+      "name": "NOAA SWPC Planetary K Index",
+      "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+    },
+    {
+      "id": "noaa-45-day",
+      "name": "NOAA SWPC 45-Day Forecast",
+      "url": "https://services.swpc.noaa.gov/json/45-day-forecast.json"
+    },
+    {
+      "id": "noaa-viewline",
+      "name": "NOAA SWPC Aurora Viewline (Experimental)",
+      "url": "https://www.swpc.noaa.gov/products/aurora-viewline-tonight-and-tomorrow-night-experimental"
+    },
+    {
+      "id": "noaa-solar-wind",
+      "name": "NOAA SWPC Solar Wind",
+      "url": "https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json"
+    },
+    {
+      "id": "nasa-donki",
+      "name": "NASA DONKI CME Analysis",
+      "url": "https://api.nasa.gov/DONKI/CMEAnalysis"
+    },
+    {
+      "id": "open-meteo",
+      "name": "Open-Meteo GFS Forecast API",
+      "url": "https://open-meteo.com/en/docs/gfs-api"
+    }
+  ]
+}

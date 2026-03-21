@@ -1,0 +1,127 @@
+{
+  "app": {
+    "name": "Aurora Straza",
+    "author": "Alan Catovic",
+    "region": "Bosna i Hercegovina",
+    "description": "Aurora alarm za BiH koji kombinuje NOAA aurora mapu, geomagnetne indikatore, nocne uslove i oblacnost."
+  },
+  "updatedAt": "2026-03-20T14:05:24.419Z",
+  "auroraMap": {
+    "sourceUrl": "https://www.swpc.noaa.gov/products/aurora-30-minute-forecast",
+    "imageUrl": "https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg",
+    "observationTime": "2026-03-20T13:57:00Z",
+    "forecastTime": "2026-03-20T14:56:00Z"
+  },
+  "current": {
+    "kp": 3.67,
+    "kpLabel": "3.7",
+    "solarWindSpeed": 471.4,
+    "solarWindSpeedLabel": "471 km/s",
+    "density": 0.13,
+    "densityLabel": "0.1 cm^-3",
+    "bz": 15.2,
+    "bzLabel": "15.2 nT"
+  },
+  "cmeContext": null,
+  "summary": {
+    "score": 4,
+    "level": "unlikely",
+    "levelLabel": "Malo vjerovatno",
+    "bestSite": {
+      "id": "bihac",
+      "name": "Bihac",
+      "lat": 44.8167,
+      "lon": 15.8708,
+      "note": "Najkorisniji sjeverozapadni profil za BiH."
+    },
+    "bestWindowLabel": "20. 3. u 21:00",
+    "localNightKey": "20260320",
+    "message": "Trenutni indikatori nisu dovoljno jaki za vjerovatnu vidljivost iz BiH."
+  },
+  "sites": [
+    {
+      "id": "bihac",
+      "name": "Bihac",
+      "note": "Najkorisniji sjeverozapadni profil za BiH.",
+      "score": 4,
+      "bestWindowLabel": "20. 3. u 21:00",
+      "cloudCover": 0,
+      "lowCloudCover": 0,
+      "sunAltitudeDeg": -29.54,
+      "auroraProbabilityNorth": 0,
+      "auroraDistanceKm": 9999,
+      "reasons": ["Kp 3.7", "NOAA sjeverni koridor 0%", "udaljenost oko 9999 km", "oblacnost 0%"]
+    },
+    {
+      "id": "brcko",
+      "name": "Brcko",
+      "note": "Najsevernija ravnicarska opcija u BiH.",
+      "score": 3,
+      "bestWindowLabel": "20. 3. u 21:00",
+      "cloudCover": 40,
+      "lowCloudCover": 0,
+      "sunAltitudeDeg": -31.2,
+      "auroraProbabilityNorth": 0,
+      "auroraDistanceKm": 9999,
+      "reasons": ["Kp 3.7", "NOAA sjeverni koridor 0%", "udaljenost oko 9999 km", "oblacnost 40%"]
+    },
+    {
+      "id": "tuzla",
+      "name": "Tuzla",
+      "note": "Koristan istocni referentni punkt.",
+      "score": 3,
+      "bestWindowLabel": "20. 3. u 22:00",
+      "cloudCover": 12,
+      "lowCloudCover": 8,
+      "sunAltitudeDeg": -38.94,
+      "auroraProbabilityNorth": 0,
+      "auroraDistanceKm": 9999,
+      "reasons": ["Kp 3.7", "NOAA sjeverni koridor 0%", "udaljenost oko 9999 km", "oblacnost 12%"]
+    },
+    {
+      "id": "banja-luka",
+      "name": "Banja Luka",
+      "note": "Sjeverni horizont dobar za niske auroralne lukove.",
+      "score": 2,
+      "bestWindowLabel": "20. 3. u 22:00",
+      "cloudCover": 65,
+      "lowCloudCover": 0,
+      "sunAltitudeDeg": -38.11,
+      "auroraProbabilityNorth": 0,
+      "auroraDistanceKm": 9999,
+      "reasons": ["Kp 3.7", "NOAA sjeverni koridor 0%", "udaljenost oko 9999 km", "oblacnost 65%"]
+    }
+  ],
+  "sources": [
+    {
+      "id": "noaa-aurora",
+      "name": "NOAA SWPC Aurora - 30 Minute Forecast",
+      "url": "https://www.swpc.noaa.gov/products/aurora-30-minute-forecast"
+    },
+    {
+      "id": "noaa-ovation-json",
+      "name": "NOAA SWPC OVATION latest JSON",
+      "url": "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json"
+    },
+    {
+      "id": "noaa-kp",
+      "name": "NOAA SWPC Planetary K Index",
+      "url": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+    },
+    {
+      "id": "noaa-solar-wind",
+      "name": "NOAA SWPC Solar Wind",
+      "url": "https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json"
+    },
+    {
+      "id": "nasa-donki",
+      "name": "NASA DONKI CME Analysis",
+      "url": "https://api.nasa.gov/DONKI/CMEAnalysis"
+    },
+    {
+      "id": "open-meteo",
+      "name": "Open-Meteo GFS Forecast API",
+      "url": "https://open-meteo.com/en/docs/gfs-api"
+    }
+  ]
+}

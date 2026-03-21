@@ -1,0 +1,12 @@
+{
+  "title": "Astronomy Picture of the Day",
+  "date": "2026-03-20",
+  "explanation": "Live NASA APOD trenutno nije dostupan u ovom modu rada. Kada Express backend radi, dashboard povlaci dnevni APOD preko NASA API-ja ili direktno sa APOD stranice kao fallback.",
+  "imageUrl": "",
+  "mediaType": "image",
+  "sourceUrl": "https://apod.nasa.gov/apod/astropix.html",
+  "mediaUrl": "",
+  "hdUrl": "",
+  "copyright": "",
+  "fetchedAt": "2026-03-20T00:00:00.000Z"
+}
