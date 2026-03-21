@@ -532,8 +532,9 @@
             </label>
             <button type="submit" class="button solid" id="subscription-submit">Sacuvaj pretplatu</button>
             <p class="form-note" id="form-note">
-              Alarm salje mail kada procjena za BiH predje izabrani prag. Za stvarni outgoing mail
-              treba SMTP konfiguracija u `.env`.
+              Alarm salje mail kada procjena za BiH predje izabrani prag. Live slanje trenutno ide
+              preko Gmail API integracije na Cloudflare Workeru, ali dok je Google OAuth app u
+              Testing modu moze biti potrebna obnova tokena.
             </p>
             <p class="form-feedback" id="form-feedback"></p>
           </form>

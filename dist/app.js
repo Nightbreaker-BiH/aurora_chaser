@@ -396,7 +396,7 @@ const UI_TEXT = {
     ],
     submit: "Sacuvaj pretplatu",
     formNote:
-      "Alarm salje mail kada procjena za BiH predje izabrani prag. Za stvarni outgoing mail treba SMTP konfiguracija u `.env`.",
+      "Alarm salje mail kada procjena za BiH predje izabrani prag. Live slanje trenutno ide preko Gmail API integracije na Cloudflare Workeru, ali dok je Google OAuth app u Testing modu moze biti potrebna obnova tokena.",
     sourcesKicker: "Reference",
     sourcesHeading: "Izvori i feedovi",
     hpiThresholdTitle: "Razumijevanje auroralne snage",
@@ -503,7 +503,7 @@ const UI_TEXT = {
     formInvalidThreshold: "Nepoznat prag alarma.",
     formSaved: "Pretplata sacuvana. Alarm ce slati email kada procjena za BiH predje izabrani prag.",
     formSavedNoSmtp:
-      "Pretplata sacuvana. Za stvarno slanje emailova treba popuniti SMTP varijable u .env.",
+      "Pretplata sacuvana. Za stvarno slanje emailova treba dovrsiti Gmail API konfiguraciju na Workeru.",
     formError: "Greska pri cuvanju pretplate.",
     statusLoadError: "Nisam uspio ucitati NOAA/NASA/weather podatke. Provjeri backend i mrezu.",
     confidence: "Povjerenje",
@@ -643,7 +643,7 @@ const UI_TEXT = {
     ],
     submit: "Save subscription",
     formNote:
-      "The alert sends an email when the Bosnia estimate crosses the selected threshold. SMTP configuration in `.env` is required for real outgoing mail.",
+      "The alert sends an email when the Bosnia estimate crosses the selected threshold. Live delivery currently runs through the Gmail API integration on the Cloudflare Worker, but while the Google OAuth app remains in Testing mode the token may need renewal.",
     sourcesKicker: "References",
     sourcesHeading: "Sources and feeds",
     hpiThresholdTitle: "Understanding Aurora Power",
@@ -750,7 +750,7 @@ const UI_TEXT = {
     formInvalidThreshold: "Unknown alert threshold.",
     formSaved: "Subscription saved. The alert will send an email when the Bosnia estimate crosses the selected threshold.",
     formSavedNoSmtp:
-      "Subscription saved. Fill in the SMTP variables in .env to enable real email sending.",
+      "Subscription saved. Complete the Gmail API configuration on the Worker to enable real email delivery.",
     formError: "Error while saving the subscription.",
     statusLoadError: "I could not load NOAA/NASA/weather data. Check the backend and network.",
     confidence: "Confidence",
