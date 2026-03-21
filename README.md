@@ -63,6 +63,16 @@ Za Cloudflare email delivery koristi se Gmail API, ne Resend. Potrebni secrets s
 - `GMAIL_REPLY_TO` opcionalno
 - `ADMIN_TEST_TOKEN` za zasticeni `/api/test-email` endpoint
 
+Za dobijanje `GMAIL_REFRESH_TOKEN` mozes koristiti lokalni helper:
+
+```bash
+set GMAIL_CLIENT_ID=...
+set GMAIL_CLIENT_SECRET=...
+npm run gmail:oauth
+```
+
+Helper ce ispisati lokalni redirect URI i Google consent URL, te nakon odobrenja vratiti `refresh_token` u terminal.
+
 Osnovni deploy tok:
 
 ```bash
