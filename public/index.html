@@ -19,9 +19,15 @@
           <h1>AuroraChaser</h1>
           <div class="hero-meta-row">
             <p class="author" id="author-label">Autor: Alan Catovic</p>
-            <div class="lang-switch" role="group" aria-label="Prekidac jezika">
-              <button class="lang-button is-active" id="lang-bs" type="button" data-lang="bs">BOS</button>
-              <button class="lang-button" id="lang-en" type="button" data-lang="en">ENG</button>
+            <div class="hero-controls">
+              <div class="lang-switch" role="group" aria-label="Prekidac jezika">
+                <button class="lang-button is-active" id="lang-bs" type="button" data-lang="bs">BOS</button>
+                <button class="lang-button" id="lang-en" type="button" data-lang="en">ENG</button>
+              </div>
+              <div class="theme-switch" role="group" aria-label="Prekidac teme">
+                <button class="theme-button" id="theme-dark" type="button" data-theme-choice="dark">Tamno</button>
+                <button class="theme-button" id="theme-light" type="button" data-theme-choice="light">Svijetlo</button>
+              </div>
             </div>
           </div>
           <p class="lede" id="hero-lede">
@@ -70,173 +76,6 @@
       </header>
 
       <main class="dashboard">
-        <section class="panel location-panel" id="location-panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Lokacija i auroralna vidljivost</p>
-              <h2>BiH vidljivost po lokaciji</h2>
-            </div>
-            <button class="button ghost compact" id="locate-me" type="button">Koristi moju lokaciju</button>
-          </div>
-          <div class="location-card" id="location-card">
-            <p class="location-title" id="location-title">Preporucena lokacija za BiH</p>
-            <p class="location-summary" id="location-summary">Ucitavanje...</p>
-            <div class="location-grid" id="location-grid"></div>
-          </div>
-        </section>
-
-        <section class="panel map-panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Aktuelna aurora prognoza</p>
-              <h2>NOAA Aurora 30-minute mapa</h2>
-            </div>
-            <a href="https://www.swpc.noaa.gov/products/aurora-30-minute-forecast" target="_blank" rel="noreferrer">NOAA izvor</a>
-          </div>
-          <figure class="map-frame">
-            <img
-              id="aurora-map"
-              alt="NOAA northern hemisphere aurora map"
-              src="https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg"
-            />
-          </figure>
-          <p class="map-caption" id="map-caption">
-            NOAA OVATION mapa za sjevernu hemisferu, sa BiH interpretacijom u ostatku dashboarda.
-          </p>
-        </section>
-
-        <section class="panel viewline-panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">NOAA kontekst proizvod</p>
-              <h2>NOAA viewline panel</h2>
-            </div>
-            <a id="viewline-source" href="https://www.swpc.noaa.gov/products/aurora-viewline-tonight-and-tomorrow-night-experimental" target="_blank" rel="noreferrer">NOAA viewline</a>
-          </div>
-          <div class="viewline-grid">
-            <figure class="weather-sat-frame">
-              <img
-                id="viewline-tonight"
-                alt="NOAA tonight aurora viewline"
-                src="https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tonights_static_viewline_forecast.png"
-              />
-              <figcaption class="panel-note" id="viewline-tonight-caption">Tonight</figcaption>
-            </figure>
-            <figure class="weather-sat-frame">
-              <img
-                id="viewline-tomorrow"
-                alt="NOAA tomorrow night aurora viewline"
-                src="https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tomorrow_nights_static_viewline_forecast.png"
-              />
-              <figcaption class="panel-note" id="viewline-tomorrow-caption">Tomorrow night</figcaption>
-            </figure>
-          </div>
-          <p class="panel-note" id="viewline-caveat">
-            Za BiH ovo nije direktna lokalna mapa nego referenca na jacinu dogadjaja.
-          </p>
-        </section>
-
-        <section class="panel outlook-panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Prognoza auroralne aktivnosti</p>
-              <h2>BiH outlook</h2>
-            </div>
-          </div>
-          <div class="outlook-grid">
-            <article class="outlook-card" id="tonight-card"></article>
-            <article class="outlook-card" id="tomorrow-card"></article>
-          </div>
-          <div class="quick-sites-grid">
-            <article class="outlook-card quick-site-card" id="sarajevo-card"></article>
-            <article class="outlook-card quick-site-card" id="north-site-card"></article>
-          </div>
-        </section>
-
-        <section class="panel five-day-panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Sira prognoza</p>
-              <h2>Narednih 5 dana</h2>
-            </div>
-          </div>
-          <div class="five-day-grid" id="five-day-grid"></div>
-          <p class="panel-note" id="five-day-note">Narednih 5 dana koriste NOAA 45-day `Ap` guidance kao planerski proxy, ne kao operativni nocni alarm.</p>
-        </section>
-
-        <section class="panel quality-panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">Povjerenje i svjezina</p>
-              <h2>Svjezina feeda</h2>
-            </div>
-          </div>
-          <div class="quality-layout">
-            <div class="quality-content">
-              <div class="quality-summary" id="quality-summary"></div>
-              <div class="quality-list" id="quality-list"></div>
-            </div>
-            <article class="quality-visual apod-card" aria-live="polite">
-              <div class="apod-head">
-                <div>
-                  <span class="metric-label">NASA APOD</span>
-                  <h3 id="apod-title">Astronomy Picture of the Day</h3>
-                </div>
-                <a id="apod-link" href="https://apod.nasa.gov/apod/astropix.html" target="_blank" rel="noreferrer">NASA APOD</a>
-              </div>
-              <div class="apod-body">
-                <figure class="apod-media" id="apod-media">
-                  <img id="apod-image" alt="NASA Astronomy Picture of the Day" />
-                  <figcaption class="apod-placeholder" id="apod-placeholder">Ucitavanje APOD feeda...</figcaption>
-                </figure>
-                <div class="apod-copy">
-                  <p class="site-meta" id="apod-date">NASA APOD feed se ucitava...</p>
-                  <p class="site-meta apod-explanation" id="apod-explanation">
-                    Dnevna NASA astronomska slika ce se prikazati ovdje kao dodatni vizuelni kontekst.
-                  </p>
-                  <p class="site-meta" id="apod-credit">Izvor: NASA Astronomy Picture of the Day.</p>
-                </div>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="panel kp-panel">
-          <div class="panel-head">
-            <div>
-              <p class="panel-kicker">KP indeks i geomagnetna aktivnost</p>
-              <h2>KP monitor</h2>
-            </div>
-          </div>
-          <div class="metric-grid four">
-            <article class="metric-card">
-              <span class="metric-label">Current KP</span>
-              <strong id="kp-value">--</strong>
-              <small id="kp-scale">--</small>
-            </article>
-            <article class="metric-card">
-              <span class="metric-label">Max KP (24h)</span>
-              <strong id="kp-max-value">--</strong>
-            </article>
-            <article class="metric-card">
-              <span class="metric-label">Tonight max KP</span>
-              <strong id="kp-tonight-value">--</strong>
-            </article>
-            <article class="metric-card">
-              <span class="metric-label">Tomorrow max KP</span>
-              <strong id="kp-tomorrow-value">--</strong>
-            </article>
-          </div>
-          <div class="chart-card">
-            <h3>Observed KP 24h</h3>
-            <div class="spark-chart" id="kp-observed-chart"></div>
-          </div>
-          <div class="chart-card">
-            <h3>Forecast bins</h3>
-            <div class="spark-chart" id="kp-forecast-chart"></div>
-          </div>
-        </section>
-
         <section class="panel hpi-panel">
           <div class="panel-head">
             <div>
@@ -315,6 +154,183 @@
           <div class="chart-card">
             <h3>Bz trend 24h</h3>
             <div class="spark-chart negative" id="bz-chart"></div>
+          </div>
+        </section>
+
+        <section class="panel location-panel" id="location-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Lokacija i auroralna vidljivost</p>
+              <h2>BiH vidljivost po lokaciji</h2>
+            </div>
+            <button class="button ghost compact" id="locate-me" type="button">Koristi moju lokaciju</button>
+          </div>
+          <div class="location-card" id="location-card">
+            <p class="location-title" id="location-title">Preporucena lokacija za BiH</p>
+            <p class="location-summary" id="location-summary">Ucitavanje...</p>
+            <div class="location-grid" id="location-grid"></div>
+          </div>
+        </section>
+
+        <section class="panel map-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Aktuelna aurora prognoza</p>
+              <h2>NOAA Aurora 30-minute mapa</h2>
+            </div>
+            <a href="https://www.swpc.noaa.gov/products/aurora-30-minute-forecast" target="_blank" rel="noreferrer">NOAA izvor</a>
+          </div>
+          <figure class="map-frame">
+            <img
+              id="aurora-map"
+              alt="NOAA northern hemisphere aurora map"
+              src="https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg"
+            />
+          </figure>
+          <p class="map-caption" id="map-caption">
+            NOAA OVATION mapa za sjevernu hemisferu, sa BiH interpretacijom u ostatku dashboarda.
+          </p>
+        </section>
+
+        <section class="panel viewline-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">NOAA kontekst proizvod</p>
+              <h2>NOAA viewline panel</h2>
+            </div>
+            <a id="viewline-source" href="https://www.swpc.noaa.gov/products/aurora-viewline-tonight-and-tomorrow-night-experimental" target="_blank" rel="noreferrer">NOAA viewline</a>
+          </div>
+          <div class="viewline-grid">
+            <figure class="weather-sat-frame">
+              <img
+                id="viewline-tonight"
+                alt="NOAA tonight aurora viewline"
+                src="https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tonights_static_viewline_forecast.png"
+              />
+              <figcaption class="panel-note" id="viewline-tonight-caption">Tonight</figcaption>
+            </figure>
+            <figure class="weather-sat-frame">
+              <img
+                id="viewline-tomorrow"
+                alt="NOAA tomorrow night aurora viewline"
+                src="https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tomorrow_nights_static_viewline_forecast.png"
+              />
+              <figcaption class="panel-note" id="viewline-tomorrow-caption">Tomorrow night</figcaption>
+            </figure>
+          </div>
+          <p class="panel-note" id="viewline-caveat">
+            Za BiH ovo nije direktna lokalna mapa nego referenca na jacinu dogadjaja.
+          </p>
+        </section>
+
+        <section class="panel kiruna-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">IRF KIRUNA GEOMAGNETNI SIGNAL</p>
+              <h2>Kiruna magnetometar</h2>
+            </div>
+            <a id="kiruna-source" href="https://www2.irf.se/Observatory/?link=Magnetometers" target="_blank" rel="noreferrer">IRF izvor</a>
+          </div>
+          <div class="kiruna-layout">
+            <article class="quality-visual kiruna-visual">
+              <figure class="kiruna-frame">
+                <img
+                  id="kiruna-graph"
+                  alt="IRF Kiruna live magnetogram"
+                  src="https://www2.irf.se/maggraphs/maglinux_xyz_abs.svgz"
+                />
+              </figure>
+              <p class="panel-note" id="kiruna-caption">
+                IRF 24h magnetogram za Kirunu sa XYZ komponentama, quiet curves i K-indeks trakom.
+              </p>
+              <div class="kiruna-stats-grid" id="kiruna-stats-grid"></div>
+              <p class="panel-note" id="kiruna-live-note">
+                1h digitalni feed koristi preliminarna odstupanja od ocekivanog mjesecnog srednjaka.
+              </p>
+            </article>
+            <div class="kiruna-copy">
+              <p class="metric-label" id="kiruna-explain-label">Kako citati ovaj dijagram</p>
+              <div class="kiruna-explain-grid" id="kiruna-explain-grid"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel outlook-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Prognoza auroralne aktivnosti</p>
+              <h2>BiH outlook</h2>
+            </div>
+          </div>
+          <div class="outlook-grid">
+            <article class="outlook-card" id="tonight-card"></article>
+            <article class="outlook-card" id="tomorrow-card"></article>
+          </div>
+          <div class="quick-sites-grid">
+            <article class="outlook-card quick-site-card" id="sarajevo-card"></article>
+            <article class="outlook-card quick-site-card" id="north-site-card"></article>
+          </div>
+        </section>
+
+        <section class="panel five-day-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Sira prognoza</p>
+              <h2>Narednih 5 dana</h2>
+            </div>
+          </div>
+          <div class="five-day-grid" id="five-day-grid"></div>
+          <p class="panel-note" id="five-day-note">Narednih 5 dana koriste NOAA 45-day `Ap` guidance kao planerski proxy, ne kao operativni nocni alarm.</p>
+        </section>
+
+        <section class="panel quality-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Povjerenje i svjezina</p>
+              <h2>Svjezina feeda</h2>
+            </div>
+          </div>
+          <div class="quality-layout">
+            <div class="quality-content">
+              <div class="quality-summary" id="quality-summary"></div>
+              <div class="quality-list" id="quality-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel kp-panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">KP indeks i geomagnetna aktivnost</p>
+              <h2>KP monitor</h2>
+            </div>
+          </div>
+          <div class="metric-grid four">
+            <article class="metric-card">
+              <span class="metric-label">Current KP</span>
+              <strong id="kp-value">--</strong>
+              <small id="kp-scale">--</small>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Max KP (24h)</span>
+              <strong id="kp-max-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Tonight max KP</span>
+              <strong id="kp-tonight-value">--</strong>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Tomorrow max KP</span>
+              <strong id="kp-tomorrow-value">--</strong>
+            </article>
+          </div>
+          <div class="chart-card">
+            <h3>Observed KP 24h</h3>
+            <div class="spark-chart" id="kp-observed-chart"></div>
+          </div>
+          <div class="chart-card">
+            <h3>Forecast bins</h3>
+            <div class="spark-chart" id="kp-forecast-chart"></div>
           </div>
         </section>
 
@@ -508,6 +524,72 @@
               </article>
             </div>
           </div>
+        </section>
+
+        <section class="panel apod-panel" aria-live="polite">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">NASA APOD</p>
+              <h2 id="apod-title">Astronomy Picture of the Day</h2>
+            </div>
+            <a id="apod-link" href="https://apod.nasa.gov/apod/astropix.html" target="_blank" rel="noreferrer">NASA APOD</a>
+          </div>
+          <div class="apod-body">
+            <figure class="apod-media" id="apod-media">
+              <img id="apod-image" alt="NASA Astronomy Picture of the Day" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+              <figcaption class="apod-placeholder" id="apod-placeholder">Ucitavanje APOD feeda...</figcaption>
+            </figure>
+            <div class="apod-copy">
+              <p class="site-meta" id="apod-date">NASA APOD feed se ucitava...</p>
+              <p class="site-meta apod-explanation" id="apod-explanation">
+                Dnevna NASA astronomska slika ce se prikazati ovdje kao dodatni vizuelni kontekst.
+              </p>
+              <p class="site-meta" id="apod-credit">Izvor: NASA Astronomy Picture of the Day.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel solar-panel" aria-live="polite">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Solarni monitoring</p>
+              <h2>Live Sunce i pjege</h2>
+            </div>
+            <a id="solar-link" href="https://soho.nascom.nasa.gov/sunspots/" target="_blank" rel="noreferrer">SOHO</a>
+          </div>
+          <div class="solar-body">
+            <figure class="solar-frame">
+              <img
+                id="sunspot-image"
+                src="https://soho.nascom.nasa.gov/data/synoptic/sunspots_earth/mdi_sunspots_1024.jpg"
+                alt="SOHO SDO sunspots frame"
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+              />
+              <figcaption class="solar-caption">
+                <strong id="sunspot-title">Sunspots / pjege</strong>
+                <span id="sunspot-caption">SOHO/SDO kadar Suncevog diska sa oznacenim aktivnim regionima.</span>
+              </figcaption>
+            </figure>
+            <figure class="solar-frame">
+              <img
+                id="eit284-image"
+                src="https://soho.nascom.nasa.gov/data/realtime/eit_284/512/latest.jpg"
+                alt="SOHO EIT 284 angstrom frame"
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+              />
+              <figcaption class="solar-caption">
+                <strong id="eit284-title">SOHO EIT 284 A</strong>
+                <span id="eit284-caption">Ekstremno UV kadar korone u 284 A iz realtime SOHO EIT feeda.</span>
+              </figcaption>
+            </figure>
+          </div>
+          <p class="site-meta solar-note" id="solar-note">
+            Direktni SOHO/SDO feedovi; browser periodicki osvjezava slike radi svjezeg kadra.
+          </p>
         </section>
 
         <section class="panel sources-panel">

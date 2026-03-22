@@ -1,13 +1,24 @@
 const LANGUAGE_STORAGE_KEY = "aurorachaser.language";
+const THEME_STORAGE_KEY = "aurorachaser.theme";
 const LOCALES = {
   bs: "bs-BA",
   en: "en-US"
 };
 
+function detectInitialTheme() {
+  const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  if (savedTheme === "light" || savedTheme === "dark") {
+    return savedTheme;
+  }
+
+  return window.matchMedia?.("(prefers-color-scheme: light)")?.matches ? "light" : "dark";
+}
+
 const state = {
   status: null,
   apod: null,
-  lang: localStorage.getItem(LANGUAGE_STORAGE_KEY) === "en" ? "en" : "bs"
+  lang: localStorage.getItem(LANGUAGE_STORAGE_KEY) === "en" ? "en" : "bs",
+  theme: detectInitialTheme()
 };
 
 const statusRibbon = document.querySelector("#status-ribbon");
@@ -32,6 +43,9 @@ const heroSecondaryAction = document.querySelector("#hero-secondary-action");
 const heroBannerImage = document.querySelector("#hero-banner-image");
 const scoreLabel = document.querySelector(".score-label");
 const langButtons = [...document.querySelectorAll("[data-lang]")];
+const themeButtons = [...document.querySelectorAll("[data-theme-choice]")];
+const themeDarkButton = document.querySelector("#theme-dark");
+const themeLightButton = document.querySelector("#theme-light");
 
 const locateButton = document.querySelector("#locate-me");
 const locationTitle = document.querySelector("#location-title");
@@ -46,6 +60,13 @@ const viewlineTomorrow = document.querySelector("#viewline-tomorrow");
 const viewlineTonightCaption = document.querySelector("#viewline-tonight-caption");
 const viewlineTomorrowCaption = document.querySelector("#viewline-tomorrow-caption");
 const viewlineCaveat = document.querySelector("#viewline-caveat");
+const kirunaSource = document.querySelector("#kiruna-source");
+const kirunaGraph = document.querySelector("#kiruna-graph");
+const kirunaCaption = document.querySelector("#kiruna-caption");
+const kirunaStatsGrid = document.querySelector("#kiruna-stats-grid");
+const kirunaLiveNote = document.querySelector("#kiruna-live-note");
+const kirunaExplainLabel = document.querySelector("#kiruna-explain-label");
+const kirunaExplainGrid = document.querySelector("#kiruna-explain-grid");
 const tonightCard = document.querySelector("#tonight-card");
 const tomorrowCard = document.querySelector("#tomorrow-card");
 const sarajevoCard = document.querySelector("#sarajevo-card");
@@ -61,6 +82,14 @@ const apodPlaceholder = document.querySelector("#apod-placeholder");
 const apodDate = document.querySelector("#apod-date");
 const apodExplanation = document.querySelector("#apod-explanation");
 const apodCredit = document.querySelector("#apod-credit");
+const solarLink = document.querySelector("#solar-link");
+const sunspotImage = document.querySelector("#sunspot-image");
+const sunspotTitle = document.querySelector("#sunspot-title");
+const sunspotCaption = document.querySelector("#sunspot-caption");
+const eit284Image = document.querySelector("#eit284-image");
+const eit284Title = document.querySelector("#eit284-title");
+const eit284Caption = document.querySelector("#eit284-caption");
+const solarNote = document.querySelector("#solar-note");
 
 const kpValue = document.querySelector("#kp-value");
 const kpScale = document.querySelector("#kp-scale");
@@ -118,6 +147,10 @@ const infoPanels = [...document.querySelectorAll(".info-panel")];
 const modeTabs = [...document.querySelectorAll("[data-mode-tab]")];
 const modePanels = [...document.querySelectorAll("[data-mode-panel]")];
 const APOD_FALLBACK_URL = "/sample-apod.json";
+const SOLAR_IMAGE_REFRESH_MS = 10 * 60 * 1000;
+const SOHO_SUNSPOTS_URL = "https://soho.nascom.nasa.gov/data/synoptic/sunspots_earth/mdi_sunspots_1024.jpg";
+const SOHO_EIT_284_URL = "https://soho.nascom.nasa.gov/data/realtime/eit_284/512/latest.jpg";
+const NASA_APOD_DIRECT_URL = "https://api.nasa.gov/planetary/apod?thumbs=true&api_key=DEMO_KEY";
 
 const SITE_COPY = {
   bihac: {
@@ -239,6 +272,14 @@ const SOURCE_COPY = {
     bs: "NASA Astronomy Picture of the Day",
     en: "NASA Astronomy Picture of the Day"
   },
+  "soho-sunspots": {
+    bs: "SOHO Sunspots / SDO sunceve pjege",
+    en: "SOHO Sunspots / SDO sunspots"
+  },
+  "soho-eit-284": {
+    bs: "SOHO EIT 284 latest image",
+    en: "SOHO EIT 284 latest image"
+  },
   "open-meteo": {
     bs: "Open-Meteo GFS prognozni API",
     en: "Open-Meteo GFS Forecast API"
@@ -246,6 +287,14 @@ const SOURCE_COPY = {
   "meteosat-balkans": {
     bs: "Meteosat IR Italija / Slovenija / Hrvatska / BiH",
     en: "Meteosat IR Italy / Slovenia / Croatia / BiH"
+  },
+  "irf-kiruna-magnetometers": {
+    bs: "IRF Kiruna magnetometri",
+    en: "IRF Kiruna magnetometers"
+  },
+  "irf-kiruna-rt1h": {
+    bs: "IRF Kiruna posljednji sat XYZ feed",
+    en: "IRF Kiruna last-hour XYZ feed"
   }
 };
 
@@ -279,36 +328,37 @@ const FEED_COPY = {
 const UI_TEXT = {
   bs: {
     author: "Autor: Alan Catovic",
-    heroLede: "NOAA aurora mapa, KP/HPI/MAG/CME podaci i BiH nocni uslovi u jednom dashboardu.",
+    heroLede:
+      "NOAA aurora mapa, KP/HPI/MAG/CME, Kiruna magnetometar i BiH nocni uslovi sa lokacijama, checklistom i guidanceom za kameru/golo oko u jednom dashboardu.",
     aboutAppButton: "O aplikaciji",
     aboutAppKicker: "O aplikaciji",
-    aboutAppTitle: "Sta AuroraChaser radi za BiH",
+    aboutAppTitle: "Sta AuroraChaser daje za BiH",
     aboutAppClose: "Zatvori",
     aboutAppIntro:
-      "AuroraChaser je BiH-orijentisan operativni dashboard za procjenu da li auroru vrijedi pratiti iz Bosne i Hercegovine u datoj noci. Ne prikazuje samo globalnu geomagnetnu aktivnost nego je filtrira kroz lokalne vremenske i opticke uslove.",
+      "AuroraChaser je BiH-orijentisan operativni dashboard koji na jednom mjestu spaja NOAA aurora proizvode, solarni vjetar i CME kontekst, Kiruna magnetometar, BiH vremenske i opticke uslove, rangiranje lokacija i odluku da li vrijedi ici na teren.",
     aboutAppSections: [
       {
-        title: "Koje podatke koristi",
+        title: "Sta prati u pozadini",
         items: [
-          "Koristi NOAA OVATION mapu i viewline kao kontekst rasporeda auroralnog ovala i jacine dogadjaja.",
-          "Prati planetarni Kp, HPI, Bz, brzinu i gustinu solarnog vjetra, plus DONKI CME zapise kao indikatore moguceg geomagnetnog impulsa.",
-          "Dodaje Open-Meteo oblacnost, padavine i vidljivost, Mjesec i satelitski infracrveni kadar oblaka za BiH, Hrvatsku i Sloveniju."
+          "NOAA OVATION mapu i viewline za kratkorocni raspored auroralnog ovala i jacinu dogadjaja, uz Kp, HPI, Bz, brzinu i gustinu solarnog vjetra.",
+          "NASA DONKI CME zapise, IRF Kiruna magnetometar i K-indeks kao dodatni high-latitude kontekst geomagnetnog razvoja.",
+          "Open-Meteo oblacnost, padavine i vidljivost, Mjesec, Meteosat infracrveni kadar i NASA APOD kao dodatni vizuelni i operativni sloj."
         ]
       },
       {
         title: "Sta racuna za korisnika u BiH",
         items: [
-          "Racuna jedinstveni BiH skor za veceras, outlook za veceras i sutra, te petodnevni planerski signal.",
-          "Poreda referentne lokacije po otvorenosti sjevernog horizonta, svjetlosnom zagadjenju i trenutnim vremenskim uslovima.",
-          "Daje posebne procjene za golo oko i kameru, uz go/no-go checklist za izlazak na teren."
+          "Jedinstveni BiH skor za veceras, outlook za veceras i sutra, te petodnevni planerski signal iz guidance proizvoda.",
+          "Rangira BiH referentne lokacije po otvorenosti sjevernog horizonta, svjetlosnom zagadjenju i trenutnim vremenskim uslovima.",
+          "Daje odvojene procjene za golo oko i kameru, plus go/no-go checklist i sazetak najboljeg prozora za izlazak."
         ]
       },
       {
         title: "Kako citati rezultat",
         items: [
-          "Visok skor sam po sebi nije dovoljan ako je Bz neutralan, ako je sjever zatvoren oblacima ili ako lokacija ima los horizont.",
-          "Na BiH sirinama vizuelna pojava obicno trazi jaci geomagnetni poremecaj; kamera cesto registruje signal prije oka.",
-          "Aplikacija je alat za screening i odluku o izlasku, a ne garancija da ce aurora biti vizuelno vidljiva."
+          "NOAA mapa i viewline govore gdje je oval, Kiruna magnetometar pokazuje koliko je visokogeografski signal aktivan, a BiH weather/optics sloj govori da li ga uopste mozes iskoristiti lokalno.",
+          "Visok skor nije dovoljan ako je Bz neutralan, sjever zatvoren oblacima ili lokacija ima los horizont; na BiH sirinama kamera cesto vidi signal prije oka.",
+          "Aplikacija je alat za screening i terensku odluku, ne garancija da ce aurora biti vizuelno vidljiva."
         ]
       }
     ],
@@ -340,6 +390,50 @@ const UI_TEXT = {
     tonight: "Veceras",
     tomorrowNight: "Sutra navecer",
     viewlineCaveat: "Za BiH ovo nije direktna lokalna mapa nego referenca na jacinu dogadjaja.",
+    kirunaKicker: "IRF Kiruna geomagnetni signal",
+    kirunaHeading: "Kiruna magnetometar",
+    kirunaLink: "IRF izvor",
+    kirunaGraphAlt: "IRF Kiruna live magnetogram sa XYZ komponentama",
+    kirunaCaption: "IRF 24h magnetogram za Kirunu sa XYZ komponentama, quiet curves i K-indeks trakom.",
+    kirunaExplainLabel: "Kako citati ovaj dijagram",
+    kirunaLiveNotePrefix:
+      "1h digitalni feed daje preliminarna odstupanja od ocekivanog mjesecnog srednjaka. Zadnji sat XYZ raspon:",
+    kirunaUnavailable: "IRF Kiruna feed trenutno nije dostupan.",
+    kirunaMetricKIndex: "Kiruna K",
+    kirunaMetricLastSample: "Zadnji uzorak",
+    kirunaMetricX: "X (sjever)",
+    kirunaMetricY: "Y (istok)",
+    kirunaMetricZ: "Z (vertikala)",
+    kirunaMetricDeltaX: "dX zadnji sat",
+    kirunaKWindow: "K prozor",
+    kirunaSpan: "1h raspon",
+    kirunaLocalTime: "Lokalno",
+    kirunaUtcTime: "UTC",
+    kirunaKQuiet: "Mirno",
+    kirunaKActive: "Aktivno",
+    kirunaKStorm: "Geomagnetska oluja",
+    kirunaCards: [
+      {
+        title: "X / Y / Z komponente",
+        body:
+          "Na IRF live grafu X, Y i Z su odvojene linije, trenutno tipicno crna, plava i crvena. X je sjeverna komponenta i najkorisniji auroralni signal; Y prati istok-zapad otklon, a Z vertikalni odgovor."
+      },
+      {
+        title: "K-indeks",
+        body:
+          "K 0-2 znaci mirno stanje, 3-4 aktivno polje, a 5+ geomagnetnu oluju. Veci K obicno znaci jaci poremecaj i vecu sansu za dinamicniju auroru."
+      },
+      {
+        title: "Quiet curves",
+        body:
+          "Tanke referentne krivulje pokazuju ocekivano mirno ponasanje polja. Sto stvarne linije vise odstupaju od tih krivulja, to je geomagnetni poremecaj jaci."
+      },
+      {
+        title: "UTC i sta traziti",
+        body:
+          "Vrijeme na grafu je UTC/UT; za BiH/HR/SRB dodaj +1 h zimi ili +2 h ljeti. Za aktivnu auroru u Kiruni posebno prati brze negativne promjene X reda 200-300 nT ili vise."
+      }
+    ],
     outlookKicker: "Prognoza auroralne aktivnosti",
     outlookHeading: "BiH outlook",
     fiveDayKicker: "Sira prognoza",
@@ -470,8 +564,19 @@ const UI_TEXT = {
     apodSource: "Izvor: NASA Astronomy Picture of the Day.",
     apodVideoThumb: "APOD video thumbnail",
     apodImage: "APOD image",
+    apodIntro: "Dnevna NASA astronomska slika ce se prikazati ovdje kao dodatni vizuelni kontekst.",
     apodMissingVideo: "Danasnji APOD je video bez dostupnog thumbnaila.",
     apodMissingImage: "NASA APOD nije vratio sliku za danasnji unos.",
+    solarKicker: "Solarni monitoring",
+    solarHeading: "Live Sunce i pjege",
+    solarLink: "SOHO izvor",
+    solarSunspotTitle: "Sunspots / pjege",
+    solarSunspotAlt: "SOHO SDO kadar suncevih pjega",
+    solarSunspotCaption: "SOHO/SDO kadar Suncevog diska sa oznacenim aktivnim regionima.",
+    solarEitTitle: "SOHO EIT 284 A",
+    solarEitAlt: "SOHO EIT 284 angstrom kadar",
+    solarEitCaption: "Ekstremno UV kadar korone u 284 A iz realtime SOHO EIT feeda.",
+    solarNote: "Direktni SOHO/SDO feedovi; browser periodicki osvjezava slike radi svjezeg kadra.",
     geoUnavailable: "Browser geolokacija nije dostupna.",
     geoLocating: "Odredjujem najblizi BiH referentni punkt...",
     geoNoMatch: "Nisam uspio mapirati lokaciju na BiH referentni punkt.",
@@ -500,42 +605,46 @@ const UI_TEXT = {
     feedTime: "Vrijeme feeda",
     fieldWeather: "Vrijeme na terenu",
     siteMetricLabel: "BiH punkt",
+    themeDark: "Tamno",
+    themeLight: "Svijetlo",
     langSwitchAria: "Prekidac jezika",
+    themeSwitchAria: "Prekidac teme",
     infoTabsAria: "Kartice informacija o aurori",
     modeTabsAria: "Kartice nacina posmatranja"
   },
   en: {
     author: "Author: Alan Catovic",
-    heroLede: "NOAA aurora map, KP/HPI/MAG/CME data, and Bosnia night-sky conditions in one dashboard.",
+    heroLede:
+      "NOAA aurora map, KP/HPI/MAG/CME, the Kiruna magnetometer, and Bosnia night-sky conditions with site ranking, checklist, and camera/visual guidance in one dashboard.",
     aboutAppButton: "About app",
     aboutAppKicker: "About app",
-    aboutAppTitle: "What AuroraChaser does for Bosnia",
+    aboutAppTitle: "What AuroraChaser provides for Bosnia",
     aboutAppClose: "Close",
     aboutAppIntro:
-      "AuroraChaser is a Bosnia-focused operational dashboard for deciding whether an aurora is worth tracking from Bosnia and Herzegovina on a given night. It does not show only global geomagnetic activity; it filters that signal through local weather and optical constraints.",
+      "AuroraChaser is a Bosnia-focused operational dashboard that combines NOAA aurora products, solar-wind and CME context, the Kiruna magnetometer, Bosnia weather and optical constraints, site ranking, and field-decision guidance in one place.",
     aboutAppSections: [
       {
-        title: "What data it uses",
+        title: "What it tracks",
         items: [
-          "It uses the NOAA OVATION map and viewline as context for auroral-oval placement and overall event strength.",
-          "It tracks planetary Kp, HPI, Bz, solar-wind speed and density, plus DONKI CME entries as indicators of a possible geomagnetic impulse.",
-          "It adds Open-Meteo cloud cover, precipitation, and visibility, Moon conditions, and an infrared cloud satellite frame for Bosnia, Croatia, and Slovenia."
+          "NOAA OVATION and viewline products for short-term auroral-oval placement and event strength, together with Kp, HPI, Bz, solar-wind speed, and density.",
+          "NASA DONKI CME entries and the IRF Kiruna magnetometer/K-index as extra high-latitude context for the geomagnetic response.",
+          "Open-Meteo cloud, precipitation, and visibility data, Moon conditions, a Meteosat infrared cloud frame, and NASA APOD as additional visual and operational context."
         ]
       },
       {
         title: "What it computes for Bosnia users",
         items: [
-          "It computes a single Bosnia score for tonight, outlook cards for tonight and tomorrow, and a five-day planning signal.",
-          "It ranks reference sites by northern-horizon openness, light pollution, and current local weather conditions.",
-          "It gives separate estimates for visual observing and camera use, together with a go/no-go field checklist."
+          "A single Bosnia score for tonight, outlook cards for tonight and tomorrow, and a five-day planning signal from guidance products.",
+          "Reference-site ranking by northern-horizon openness, light pollution, and current local weather conditions.",
+          "Separate visual and camera estimates, plus a go/no-go field checklist and a best-window summary for going out."
         ]
       },
       {
         title: "How to interpret the result",
         items: [
-          "A high score alone is not enough if Bz is neutral, northern cloud blocks the view, or the site has a poor horizon.",
-          "At Bosnia latitudes a visual aurora usually requires a stronger geomagnetic disturbance; a camera often records the signal before the eye does.",
-          "The app is a screening and field-decision tool, not a guarantee of visual visibility."
+          "The NOAA map and viewline show where the oval is, the Kiruna magnetometer shows how active the high-latitude signal is, and the Bosnia weather/optics layer decides whether that signal is usable locally.",
+          "A high score alone is not enough if Bz stays neutral, northern cloud blocks the sky, or the site has a poor horizon; at Bosnia latitudes a camera often sees the signal before the eye does.",
+          "The app is a screening and field-decision tool, not a guarantee of visual aurora."
         ]
       }
     ],
@@ -567,6 +676,50 @@ const UI_TEXT = {
     tonight: "Tonight",
     tomorrowNight: "Tomorrow night",
     viewlineCaveat: "For Bosnia this is not a direct local visibility map; use it as event-strength context.",
+    kirunaKicker: "IRF Kiruna geomagnetic signal",
+    kirunaHeading: "Kiruna magnetometer",
+    kirunaLink: "IRF source",
+    kirunaGraphAlt: "IRF Kiruna live magnetogram with XYZ components",
+    kirunaCaption: "IRF 24h Kiruna magnetogram with XYZ components, quiet curves, and the K-index strip.",
+    kirunaExplainLabel: "How to read this diagram",
+    kirunaLiveNotePrefix:
+      "The 1h digital feed gives preliminary deflections from the expected monthly mean. Last-hour XYZ span:",
+    kirunaUnavailable: "IRF Kiruna feed is currently unavailable.",
+    kirunaMetricKIndex: "Kiruna K",
+    kirunaMetricLastSample: "Last sample",
+    kirunaMetricX: "X (north)",
+    kirunaMetricY: "Y (east)",
+    kirunaMetricZ: "Z (vertical)",
+    kirunaMetricDeltaX: "dX last hour",
+    kirunaKWindow: "K window",
+    kirunaSpan: "1h span",
+    kirunaLocalTime: "Local",
+    kirunaUtcTime: "UTC",
+    kirunaKQuiet: "Quiet",
+    kirunaKActive: "Active",
+    kirunaKStorm: "Geomagnetic storm",
+    kirunaCards: [
+      {
+        title: "X / Y / Z components",
+        body:
+          "On the IRF live plot X, Y, and Z are shown as separate traces, currently typically black, blue, and red. X is the northward component and the most useful auroral signal; Y shows east-west deflection, while Z tracks the vertical response."
+      },
+      {
+        title: "K index",
+        body:
+          "K 0-2 means quiet conditions, 3-4 active field conditions, and 5+ a geomagnetic storm. Higher K usually means a stronger disturbance and a better chance of dynamic aurora."
+      },
+      {
+        title: "Quiet curves",
+        body:
+          "The thin reference curves show the expected quiet magnetic behavior. The more the live traces depart from those curves, the stronger the geomagnetic disturbance."
+      },
+      {
+        title: "UTC and what to watch",
+        body:
+          "Time on the graph is UTC/UT; for Bosnia/Croatia/Serbia add +1 h in winter or +2 h in summer. For active aurora over Kiruna, watch especially for rapid negative X changes on the order of 200-300 nT or more."
+      }
+    ],
     outlookKicker: "Aurora Activity Forecast",
     outlookHeading: "BiH outlook",
     fiveDayKicker: "Longer Forecast",
@@ -697,8 +850,19 @@ const UI_TEXT = {
     apodSource: "Source: NASA Astronomy Picture of the Day.",
     apodVideoThumb: "APOD video thumbnail",
     apodImage: "APOD image",
+    apodIntro: "The daily NASA astronomy image will appear here as additional visual context.",
     apodMissingVideo: "Today's APOD is a video without an available thumbnail.",
     apodMissingImage: "NASA APOD did not return an image for today's entry.",
+    solarKicker: "Solar monitoring",
+    solarHeading: "Live Sun and sunspots",
+    solarLink: "SOHO source",
+    solarSunspotTitle: "Sunspots",
+    solarSunspotAlt: "SOHO SDO sunspots frame",
+    solarSunspotCaption: "SOHO/SDO full-disk frame with labeled active regions.",
+    solarEitTitle: "SOHO EIT 284 A",
+    solarEitAlt: "SOHO EIT 284 angstrom frame",
+    solarEitCaption: "Extreme-UV coronal frame at 284 A from the realtime SOHO EIT feed.",
+    solarNote: "Direct SOHO/SDO feeds; the browser refreshes the frames periodically to keep them current.",
     geoUnavailable: "Browser geolocation is not available.",
     geoLocating: "Finding the nearest Bosnia reference site...",
     geoNoMatch: "I could not map your location to a Bosnia reference site.",
@@ -727,7 +891,10 @@ const UI_TEXT = {
     feedTime: "Feed time",
     fieldWeather: "Field weather",
     siteMetricLabel: "BiH site",
+    themeDark: "Dark",
+    themeLight: "Light",
     langSwitchAria: "Language switch",
+    themeSwitchAria: "Theme switch",
     infoTabsAria: "Aurora information tabs",
     modeTabsAria: "Observation mode tabs"
   }
@@ -739,6 +906,73 @@ function getUi() {
 
 function getLocale() {
   return LOCALES[state.lang] ?? LOCALES.bs;
+}
+
+function applyTheme() {
+  const theme = state.theme === "light" ? "light" : "dark";
+  document.body.dataset.theme = theme;
+  document.documentElement.style.colorScheme = theme;
+
+  themeButtons.forEach((button) => {
+    const active = button.dataset.themeChoice === theme;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function normalizeExternalUrl(value, baseUrl = window.location.href) {
+  const text = String(value ?? "").trim();
+  if (!text) {
+    return "";
+  }
+
+  try {
+    const url = new URL(text, baseUrl);
+    if (url.protocol === "http:") {
+      url.protocol = "https:";
+    }
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+
+function normalizeApodPayload(payload) {
+  const mediaType = String(payload?.media_type || payload?.mediaType || "image").trim().toLowerCase();
+  const imageUrl =
+    mediaType === "image"
+      ? normalizeExternalUrl(payload?.url || payload?.hdurl || payload?.imageUrl)
+      : normalizeExternalUrl(payload?.thumbnail_url || payload?.imageUrl);
+
+  return {
+    title: String(payload?.title || "Astronomy Picture of the Day").trim(),
+    date: String(payload?.date || new Date().toISOString().slice(0, 10)).trim(),
+    explanation: String(payload?.explanation || getUi().apodUnavailable).trim(),
+    imageUrl,
+    fallbackImageUrl: normalizeExternalUrl(payload?.fallbackImageUrl),
+    mediaType,
+    sourceUrl: normalizeExternalUrl(payload?.sourceUrl || "https://apod.nasa.gov/apod/astropix.html"),
+    mediaUrl: normalizeExternalUrl(payload?.url || payload?.mediaUrl),
+    hdUrl: normalizeExternalUrl(payload?.hdurl || payload?.hdUrl || payload?.url || payload?.imageUrl),
+    copyright: String(payload?.copyright || "").trim(),
+    fetchedAt: String(payload?.fetchedAt || new Date().toISOString()).trim()
+  };
+}
+
+function buildLiveImageUrl(baseUrl) {
+  const url = new URL(baseUrl);
+  url.searchParams.set("t", String(Math.floor(Date.now() / SOLAR_IMAGE_REFRESH_MS)));
+  return url.href;
+}
+
+function refreshSolarImages() {
+  if (sunspotImage) {
+    sunspotImage.src = buildLiveImageUrl(SOHO_SUNSPOTS_URL);
+  }
+
+  if (eit284Image) {
+    eit284Image.src = buildLiveImageUrl(SOHO_EIT_284_URL);
+  }
 }
 
 function formatPercent(value) {
@@ -1105,8 +1339,11 @@ function applyStaticTranslations() {
   heroBannerImage.alt = ui.heroBannerAlt;
   scoreLabel.textContent = ui.scoreLabel;
   document.querySelector(".lang-switch")?.setAttribute("aria-label", ui.langSwitchAria);
+  document.querySelector(".theme-switch")?.setAttribute("aria-label", ui.themeSwitchAria);
   document.querySelector(".info-tabs")?.setAttribute("aria-label", ui.infoTabsAria);
   document.querySelector(".mode-tabs")?.setAttribute("aria-label", ui.modeTabsAria);
+  themeDarkButton.textContent = ui.themeDark;
+  themeLightButton.textContent = ui.themeLight;
 
   document.querySelector(".location-panel .panel-kicker").textContent = ui.locationKicker;
   document.querySelector(".location-panel h2").textContent = ui.locationHeading;
@@ -1126,6 +1363,12 @@ function applyStaticTranslations() {
   viewlineTonightCaption.textContent = ui.tonight;
   viewlineTomorrowCaption.textContent = ui.tomorrowNight;
   viewlineCaveat.textContent = ui.viewlineCaveat;
+  document.querySelector(".kiruna-panel .panel-kicker").textContent = ui.kirunaKicker;
+  document.querySelector(".kiruna-panel h2").textContent = ui.kirunaHeading;
+  kirunaSource.textContent = ui.kirunaLink;
+  kirunaGraph.alt = ui.kirunaGraphAlt;
+  kirunaCaption.textContent = ui.kirunaCaption;
+  kirunaExplainLabel.textContent = ui.kirunaExplainLabel;
 
   document.querySelector(".outlook-panel .panel-kicker").textContent = ui.outlookKicker;
   document.querySelector(".outlook-panel h2").textContent = ui.outlookHeading;
@@ -1163,15 +1406,22 @@ function applyStaticTranslations() {
   document.querySelector(".sources-panel .panel-kicker").textContent = ui.sourcesKicker;
   document.querySelector(".sources-panel h2").textContent = ui.sourcesHeading;
   document.querySelector(".cme-panel .list-card h3").textContent = ui.cmeRecentHeading;
+  document.querySelector(".solar-panel .panel-kicker").textContent = ui.solarKicker;
+  document.querySelector(".solar-panel h2").textContent = ui.solarHeading;
+  solarLink.textContent = ui.solarLink;
+  sunspotTitle.textContent = ui.solarSunspotTitle;
+  sunspotImage.alt = ui.solarSunspotAlt;
+  sunspotCaption.textContent = ui.solarSunspotCaption;
+  eit284Title.textContent = ui.solarEitTitle;
+  eit284Image.alt = ui.solarEitAlt;
+  eit284Caption.textContent = ui.solarEitCaption;
+  solarNote.textContent = ui.solarNote;
 
   document.querySelector("#apod-placeholder").textContent = ui.apodLoading;
   document.querySelector("#apod-credit").textContent = ui.apodSource;
   if (!state.apod) {
     apodDate.textContent = ui.apodLoading;
-    apodExplanation.textContent =
-      state.lang === "en"
-        ? "The daily NASA astronomy image will appear here as additional visual context."
-        : "Dnevna NASA astronomska slika ce se prikazati ovdje kao dodatni vizuelni kontekst.";
+    apodExplanation.textContent = ui.apodIntro;
   }
 
   const kpCards = document.querySelectorAll(".kp-panel .metric-card .metric-label");
@@ -1212,6 +1462,11 @@ function applyStaticTranslations() {
     "threshold-card"
   );
   renderStaticCardGrid(
+    kirunaExplainGrid,
+    ui.kirunaCards.map((card) => ({ ...card })),
+    "explain-card"
+  );
+  renderStaticCardGrid(
     variablesGrid,
     ui.variableCards.map((card) => ({ ...card })),
     "explain-card"
@@ -1228,10 +1483,15 @@ function applyStaticTranslations() {
     scoreSummary.textContent = ui.scoreSummaryLoading;
   }
 
+  renderKiruna(state.status?.kiruna ?? null);
+  refreshSolarImages();
+
   langButtons.forEach((button) => {
     button.classList.toggle("is-active", button.dataset.lang === state.lang);
     button.setAttribute("aria-pressed", String(button.dataset.lang === state.lang));
   });
+
+  applyTheme();
 }
 
 function escapeHtml(value) {
@@ -1275,6 +1535,112 @@ function formatDisplayTime(value) {
   }
 
   return localizeFeedTimeLabel(value);
+}
+
+function formatClockTime(value, timeZone = undefined) {
+  if (!value) {
+    return "n/a";
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return "n/a";
+  }
+
+  return parsed.toLocaleTimeString(getLocale(), {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone
+  });
+}
+
+function describeKirunaKIndex(kIndex) {
+  const value = Number(kIndex);
+  if (!Number.isFinite(value)) {
+    return getUi().loading;
+  }
+  if (value >= 5) {
+    return getUi().kirunaKStorm;
+  }
+  if (value >= 3) {
+    return getUi().kirunaKActive;
+  }
+  return getUi().kirunaKQuiet;
+}
+
+function renderKiruna(kiruna) {
+  if (!kirunaStatsGrid) {
+    return;
+  }
+
+  const ui = getUi();
+  if (!kiruna) {
+    kirunaCaption.textContent = ui.kirunaCaption;
+    kirunaLiveNote.textContent = ui.kirunaUnavailable;
+    kirunaStatsGrid.innerHTML = `
+      <article class="quality-card">
+        <span class="metric-label">${escapeHtml(ui.status)}</span>
+        <strong>${escapeHtml(ui.kirunaUnavailable)}</strong>
+      </article>
+    `;
+    return;
+  }
+
+  kirunaSource.href = kiruna.sourceUrl;
+  kirunaSource.textContent = ui.kirunaLink;
+  kirunaGraph.src = `${kiruna.graphImageUrl}?ts=${encodeURIComponent(kiruna.lastSampleTime ?? Date.now())}`;
+  kirunaGraph.alt = ui.kirunaGraphAlt;
+  kirunaCaption.textContent = ui.kirunaCaption;
+
+  const lastSampleUtc = formatClockTime(kiruna.lastSampleTime, "UTC");
+  const lastSampleLocal = formatClockTime(kiruna.lastSampleTime);
+
+  kirunaStatsGrid.innerHTML = [
+    {
+      label: ui.kirunaMetricKIndex,
+      value: kiruna.kIndexLabel,
+      note: `${ui.kirunaKWindow}: ${kiruna.kIndexWindowLabel} | ${describeKirunaKIndex(kiruna.kIndex)}`
+    },
+    {
+      label: ui.kirunaMetricLastSample,
+      value: `${lastSampleUtc} ${ui.kirunaUtcTime}`,
+      note: `${ui.kirunaLocalTime}: ${lastSampleLocal}`
+    },
+    {
+      label: ui.kirunaMetricX,
+      value: kiruna.components.xLabel,
+      note: `${ui.kirunaSpan}: ${kiruna.spans.xLabel}`
+    },
+    {
+      label: ui.kirunaMetricY,
+      value: kiruna.components.yLabel,
+      note: `${ui.kirunaSpan}: ${kiruna.spans.yLabel}`
+    },
+    {
+      label: ui.kirunaMetricZ,
+      value: kiruna.components.zLabel,
+      note: `${ui.kirunaSpan}: ${kiruna.spans.zLabel}`
+    },
+    {
+      label: ui.kirunaMetricDeltaX,
+      value: kiruna.deltas.xLabel,
+      note: `${ui.kirunaMetricX} | ${ui.kirunaSpan}: ${kiruna.spans.xLabel}`
+    }
+  ]
+    .map(
+      (item) => `
+        <article class="quality-card">
+          <span class="metric-label">${escapeHtml(item.label)}</span>
+          <strong>${escapeHtml(item.value)}</strong>
+          <p class="site-meta">${escapeHtml(item.note)}</p>
+        </article>
+      `
+    )
+    .join("");
+
+  kirunaLiveNote.textContent =
+    `${ui.kirunaLiveNotePrefix} X ${kiruna.spans.xLabel}, Y ${kiruna.spans.yLabel}, Z ${kiruna.spans.zLabel}. ` +
+    `${ui.kirunaMetricDeltaX}: ${kiruna.deltas.xLabel}.`;
 }
 
 function getObservationTip(mode, details) {
@@ -1501,6 +1867,9 @@ function renderApodUnavailable(message = getUi().apodUnavailable) {
   apodMedia?.classList.remove("has-image");
   if (apodImage) {
     apodImage.removeAttribute("src");
+    apodImage.alt = "";
+    apodImage.onerror = null;
+    delete apodImage.dataset.fallbackImageUrl;
   }
   if (apodPlaceholder) {
     apodPlaceholder.textContent = message;
@@ -1514,9 +1883,10 @@ function renderApod(apod) {
 
   const title = String(apod?.title || "Astronomy Picture of the Day");
   const explanation = String(apod?.explanation || getUi().apodUnavailable);
-  const imageUrl = String(apod?.imageUrl || "");
+  const imageUrl = normalizeExternalUrl(apod?.imageUrl);
+  const fallbackImageUrl = normalizeExternalUrl(apod?.fallbackImageUrl);
   const mediaType = String(apod?.mediaType || "image");
-  const sourceUrl = String(apod?.sourceUrl || "https://apod.nasa.gov/apod/astropix.html");
+  const sourceUrl = normalizeExternalUrl(apod?.sourceUrl || "https://apod.nasa.gov/apod/astropix.html");
   const credit = String(apod?.copyright || "").trim();
 
   state.apod = apod;
@@ -1527,6 +1897,27 @@ function renderApod(apod) {
   apodLink.href = sourceUrl;
 
   if (imageUrl) {
+    apodImage.decoding = "async";
+    apodImage.loading = "lazy";
+    apodImage.referrerPolicy = "no-referrer";
+    apodImage.dataset.fallbackImageUrl =
+      fallbackImageUrl && fallbackImageUrl !== imageUrl ? fallbackImageUrl : "";
+    apodImage.onerror = () => {
+      const backupImageUrl = apodImage.dataset.fallbackImageUrl;
+      if (backupImageUrl) {
+        apodImage.dataset.fallbackImageUrl = "";
+        apodImage.src = backupImageUrl;
+        return;
+      }
+
+      apodMedia?.classList.remove("has-image");
+      apodImage.removeAttribute("src");
+      apodImage.alt = "";
+      if (apodPlaceholder) {
+        apodPlaceholder.textContent =
+          mediaType === "video" ? getUi().apodMissingVideo : getUi().apodMissingImage;
+      }
+    };
     apodImage.src = imageUrl;
     apodImage.alt = `${title} | NASA APOD`;
     apodMedia?.classList.add("has-image");
@@ -1539,6 +1930,8 @@ function renderApod(apod) {
   apodMedia?.classList.remove("has-image");
   apodImage.removeAttribute("src");
   apodImage.alt = "";
+  apodImage.onerror = null;
+  delete apodImage.dataset.fallbackImageUrl;
   if (apodPlaceholder) {
     apodPlaceholder.textContent =
       mediaType === "video" ? getUi().apodMissingVideo : getUi().apodMissingImage;
@@ -2290,6 +2683,7 @@ function renderStatus(status) {
   if (viewlineCaveat) {
     viewlineCaveat.textContent = ui.viewlineCaveat;
   }
+  renderKiruna(status.kiruna ?? null);
   if (weatherSatImage) {
     weatherSatImage.src = `https://img.allmetsat.com/sat/msg_fes-italia-ir039.jpg?ts=${encodeURIComponent(status.updatedAt)}`;
   }
@@ -2350,17 +2744,37 @@ async function fetchStatus() {
   renderStatus(status);
 }
 
+async function fetchApodDirectFromNasa() {
+  const response = await fetch(NASA_APOD_DIRECT_URL);
+  if (!response.ok) {
+    throw new Error(`NASA APOD direct fetch failed: ${response.status}`);
+  }
+
+  return normalizeApodPayload(await response.json());
+}
+
 async function fetchApod() {
-  const endpoints = ["/api/apod", APOD_FALLBACK_URL];
-
-  for (const endpoint of endpoints) {
-    try {
-      const response = await fetch(endpoint);
+  const loaders = [
+    async () => {
+      const response = await fetch("/api/apod");
       if (!response.ok) {
-        continue;
+        throw new Error(`APOD API fetch failed: ${response.status}`);
       }
+      return normalizeApodPayload(await response.json());
+    },
+    fetchApodDirectFromNasa,
+    async () => {
+      const response = await fetch(APOD_FALLBACK_URL);
+      if (!response.ok) {
+        throw new Error(`APOD fallback fetch failed: ${response.status}`);
+      }
+      return normalizeApodPayload(await response.json());
+    }
+  ];
 
-      renderApod(await response.json());
+  for (const loadApod of loaders) {
+    try {
+      renderApod(await loadApod());
       return;
     } catch {
       // Try the next endpoint before falling back to the placeholder state.
@@ -2498,6 +2912,19 @@ langButtons.forEach((button) => {
   });
 });
 
+themeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const nextTheme = button.dataset.themeChoice === "light" ? "light" : "dark";
+    if (nextTheme === state.theme) {
+      return;
+    }
+
+    state.theme = nextTheme;
+    localStorage.setItem(THEME_STORAGE_KEY, state.theme);
+    applyTheme();
+  });
+});
+
 applyStaticTranslations();
 
 fetchStatus().catch(() => {
@@ -2512,3 +2939,7 @@ setInterval(() => {
 setInterval(() => {
   fetchApod().catch(() => {});
 }, 60 * 60 * 1000);
+
+setInterval(() => {
+  refreshSolarImages();
+}, SOLAR_IMAGE_REFRESH_MS);

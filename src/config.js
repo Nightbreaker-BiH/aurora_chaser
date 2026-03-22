@@ -7,11 +7,16 @@ export const APP_META = {
   mapSourceUrl: "https://www.swpc.noaa.gov/products/aurora-30-minute-forecast",
   mapImageUrl: "https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg",
   apodSourceUrl: "https://apod.nasa.gov/apod/astropix.html",
+  sohoSunspotsUrl: "https://soho.nascom.nasa.gov/data/synoptic/sunspots_earth/mdi_sunspots_1024.jpg",
+  sohoEit284Url: "https://soho.nascom.nasa.gov/data/realtime/eit_284/512/latest.jpg",
   viewlineSourceUrl: "https://www.swpc.noaa.gov/products/aurora-viewline-tonight-and-tomorrow-night-experimental",
   viewlineTonightUrl:
     "https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tonights_static_viewline_forecast.png",
   viewlineTomorrowUrl:
     "https://services.swpc.noaa.gov/experimental/images/aurora_dashboard/tomorrow_nights_static_viewline_forecast.png",
+  kirunaSourceUrl: "https://www2.irf.se/Observatory/?link=Magnetometers",
+  kirunaGraphImageUrl: "https://www2.irf.se/maggraphs/maglinux_xyz_abs.svgz",
+  kirunaLiveTextUrl: "https://www2.irf.se/maggraphs/rt1hour_secondary.txt",
   sources: [
     {
       id: "noaa-aurora",
@@ -54,6 +59,16 @@ export const APP_META = {
       url: "https://apod.nasa.gov/apod/astropix.html"
     },
     {
+      id: "soho-sunspots",
+      name: "SOHO Sunspots (SDO/JSOC image feed)",
+      url: "https://soho.nascom.nasa.gov/sunspots/"
+    },
+    {
+      id: "soho-eit-284",
+      name: "SOHO EIT 284 Latest Image",
+      url: "https://soho.nascom.nasa.gov/data/realtime/eit_284/512/"
+    },
+    {
       id: "open-meteo",
       name: "Open-Meteo GFS Forecast API",
       url: "https://open-meteo.com/en/docs/gfs-api"
@@ -62,6 +77,16 @@ export const APP_META = {
       id: "meteosat-balkans",
       name: "Meteosat IR Italy / Slovenia / Croatia / BiH (courtesy of EUMETSAT via Allmetsat)",
       url: "https://en.allmetsat.com/images/msg_italia_ir039.php"
+    },
+    {
+      id: "irf-kiruna-magnetometers",
+      name: "IRF Kiruna Magnetometers",
+      url: "https://www2.irf.se/Observatory/?link=Magnetometers"
+    },
+    {
+      id: "irf-kiruna-rt1h",
+      name: "IRF Kiruna Last-Hour Magnetometer Feed",
+      url: "https://www2.irf.se/maggraphs/rt1hour_secondary.txt"
     }
   ]
 };
